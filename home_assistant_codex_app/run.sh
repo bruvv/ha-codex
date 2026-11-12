@@ -14,6 +14,7 @@ PERSIST="$(bashio::config 'session_persistence')"
 PRESERVE_HISTORY="$(bashio::config 'preserve_terminal_history')"
 PATCH_COMPATIBILITY_MODE="$(bashio::config 'patch_compatibility_mode')"
 SKIP_COMMAND_APPROVALS="$(bashio::config 'skip_command_approvals')"
+CONFIRM_RELOAD_ACTIONS="$(bashio::config 'confirm_reload_actions')"
 FILE_TRANSFER="$(bashio::config 'file_transfer')"
 MEMORIES="$(bashio::config 'memories')"
 MODEL="$(bashio::config 'model')"
@@ -76,6 +77,7 @@ export HA_CODEX_HOME_ASSISTANT_CONTROL="${HOME_ASSISTANT_CONTROL}"
 export HA_CODEX_ALLOW_HOME_ASSISTANT_RESTART="${ALLOW_HOME_ASSISTANT_RESTART}"
 export HA_CODEX_PATCH_COMPATIBILITY_MODE="${PATCH_COMPATIBILITY_MODE}"
 export HA_CODEX_SKIP_COMMAND_APPROVALS="${SKIP_COMMAND_APPROVALS}"
+export HA_CODEX_CONFIRM_RELOAD_ACTIONS="${CONFIRM_RELOAD_ACTIONS}"
 export HA_CODEX_FILE_TRANSFER="${FILE_TRANSFER}"
 export HA_CODEX_MEMORIES="${MEMORIES}"
 export HA_CODEX_REASONING_EFFORT="${REASONING_EFFORT}"
@@ -161,6 +163,7 @@ if [ "${SKIP_COMMAND_APPROVALS}" = "true" ]; then
 else
   bashio::log.info "Skip command approvals: false (default; Codex uses its own approval policy)."
 fi
+bashio::log.info "Reload confirmation required: ${CONFIRM_RELOAD_ACTIONS}."
 bashio::log.info "Sandbox mode applies when a Codex session starts; restart the add-on after changing it so a fresh session takes effect."
 bashio::log.info "Home Assistant control actions: ${HOME_ASSISTANT_CONTROL}; Core restart: ${ALLOW_HOME_ASSISTANT_RESTART}."
 if [ "${FILE_TRANSFER}" = "true" ]; then

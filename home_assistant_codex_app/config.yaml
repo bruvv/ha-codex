@@ -32,6 +32,7 @@ options:
   preserve_terminal_history: true
   patch_compatibility_mode: true
   skip_command_approvals: false
+  confirm_reload_actions: true
   file_transfer: false
   memories: false
   home_assistant_control: false
@@ -46,6 +47,7 @@ schema:
   preserve_terminal_history: bool
   patch_compatibility_mode: bool
   skip_command_approvals: bool
+  confirm_reload_actions: bool
   file_transfer: bool
   memories: bool
   home_assistant_control: bool

@@ -51,6 +51,9 @@ jobs:
           test -n "$codex_version"
           echo "codex_version=$codex_version" >> "$GITHUB_OUTPUT"
 
+      - name: Test reload confirmation instructions
+        run: bash .github/scripts/test-reload-confirmation.sh
+
       # Build as Supervisor does: BuildKit for the target platform, passing only
       # BUILD_ARCH and BUILD_VERSION, so the Dockerfile's own defaults are tested.
       - name: Build pinned ${{ matrix.arch }} add-on image

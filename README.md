@@ -139,6 +139,7 @@ want before starting HA Codex. Restart the add-on after changing a setting.
 | **Preserve terminal history** | On | Retains the browser's visible scrollbar and long inline transcript while the persistent session runs in the background. This is recommended. |
 | **Patch compatibility mode** | On | Lets Codex use its normal patch mechanism on Home Assistant OS, whose nested Bubblewrap restriction would otherwise force a shell-edit fallback. Command approval behavior is unchanged. |
 | **Skip command approvals** | Off | "YOLO mode". New Codex sessions run commands and edit files without asking you first, including Home Assistant reloads and restarts when control actions are enabled. Turn it on only if you review Codex's changes afterwards and keep backups. When off, Codex asks as usual. |
+| **Confirm reload actions** | On | Turn off to let Codex explain and perform supported reloads for user-requested changes without an extra conversational confirmation. Core restarts still require approval, and Codex's own command approval policy is unchanged. |
 | **Codex memories** | Off | Starts new Codex sessions with the Codex memories feature enabled, so Codex can carry useful details between sessions. When off, any choice made with `/memories` in Codex still applies. |
 | **Terminal file transfer** | Off | Enables `trz`/`tsz` so you can upload files to the terminal and download them back. Leave it off unless you need it, because it can interfere with pasting long text. |
 | **Allow Home Assistant control actions** | Off | Lets Codex validate configuration and request only the supported reload actions through HA Codex's restricted helper. |
@@ -154,9 +155,12 @@ additional installation is required.
 To enable it, turn on **Allow Home Assistant control actions** in
 **HA Codex → Configuration**, then restart the add-on. To permit Core restarts
 as well, explicitly turn on **Allow Home Assistant Core restart**. Both are off
-by default. Codex is instructed to show the intended action and ask for command
-approval before requesting a reload or restart, unless **Skip command
-approvals** is on.
+by default. Codex explains each action and normally asks for confirmation
+before a reload or restart. Turn off **Confirm reload actions** to skip an
+extra confirmation for supported reloads needed to apply user-requested
+changes. Core restarts still require approval. This option does not override
+Codex's underlying command approval policy; **Skip command approvals** is the
+separate global setting that disables command approvals.
 
 The built-in `ha-codex-ha` helper supports a configuration check; reloads for
 automations, scripts, scenes, groups, templates, Core configuration, and
