@@ -133,7 +133,7 @@ if [ "${PERSIST}" = "true" ]; then
   # tmux preserves the live Codex process across Home Assistant navigation.
   # Its configuration is loaded before the server starts so mouse scrolling
   # enters copy mode rather than recalling commands at the prompt.
-  COMMAND="tmux -f /etc/codex-habitat-tmux.conf set-option -g history-limit ${SCROLLBACK}; tmux -f /etc/codex-habitat-tmux.conf new-session -A -s ${SESSION_NAME} '/usr/local/bin/codex-habitat-session ${MODEL} ${TERMINAL_MODE}; exec bash -l'"
+  COMMAND="tmux -f /etc/codex-habitat-tmux.conf start-server \; set-option -g history-limit ${SCROLLBACK} \; new-session -A -s ${SESSION_NAME} '/usr/local/bin/codex-habitat-session ${MODEL} ${TERMINAL_MODE}; exec bash -l'"
 else
   COMMAND="exec /usr/local/bin/codex-habitat-session ${MODEL} ${TERMINAL_MODE}"
 fi
@@ -212,6 +212,12 @@ if [ "${FILE_TRANSFER}" = "true" ]; then
   )
 fi
 
+# ttyd expects xterm color values, not a named theme.
+case "${THEME}" in
+  light) TERMINAL_THEME='{"background":"#ffffff","foreground":"#20242d","cursor":"#20242d","selectionBackground":"#b5d5ff"}' ;;
+  *) TERMINAL_THEME='{"background":"#20242d","foreground":"#f0f0f0","cursor":"#f0f0f0","selectionBackground":"#4b5563"}' ;;
+esac
+
 # tmux (and Codex) take over the mouse, so a plain drag never creates a browser
 # selection. xterm.js lets Shift+drag force one everywhere, but on macOS the
 # equivalent Option+drag is off unless this option is set. The README's copy and
@@ -223,7 +229,7 @@ exec /usr/local/bin/ttyd \
   --client-option "macOptionClickForcesSelection=true" \
   --client-option "fontSize=${FONT_SIZE}" \
   --client-option "scrollback=${SCROLLBACK}" \
-  --client-option "theme=${THEME}" \
+  --client-option "theme=${TERMINAL_THEME}" \
   "${TTYD_TRANSFER_ARGS[@]}" \
   "${TTYD_INDEX_ARGS[@]}" \
   bash -lc "${COMMAND}"

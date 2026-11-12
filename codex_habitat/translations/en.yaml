@@ -1,0 +1,71 @@
+---
+configuration:
+  model:
+    name: Model
+    description: >-
+      Startup model. Choose default to keep your saved /model selection.
+      Availability depends on your account. Restart after changing settings.
+  reasoning_effort:
+    name: Reasoning effort
+    description: >-
+      Higher effort takes longer and uses more of your plan. Unsupported levels
+      are lowered to the model's maximum; default keeps Codex's own or saved
+      setting.
+  terminal_font_size:
+    name: Terminal font size
+    description: Terminal text size, from 10 to 24.
+  terminal_scrollback:
+    name: Terminal scrollback
+    description: >-
+      History lines kept in the browser and persistent terminal, from 1,000 to
+      50,000.
+  terminal_theme:
+    name: Terminal theme
+    description: Dark or light terminal colors.
+  session_persistence:
+    name: Session persistence
+    description: >-
+      Keep Codex running while you navigate away from the sidebar, then
+      reconnect when you return.
+  preserve_terminal_history:
+    name: Preserve terminal history
+    description: >-
+      Keep long responses in an inline transcript instead of a full-screen view.
+      Recommended for scrolling reviews.
+  patch_compatibility_mode:
+    name: Patch compatibility mode
+    description: >-
+      Use the add-on container boundary instead of nested Bubblewrap so patches
+      work on Home Assistant OS. Command approval behavior is unchanged.
+  skip_command_approvals:
+    name: Skip command approvals
+    description: >-
+      Run new Codex sessions without command approval prompts. Keep backups and
+      review changes. When off, any saved Codex approval policy still applies.
+  confirm_reload_actions:
+    name: Confirm reload actions
+    description: >-
+      Ask Codex to request reload approval. Off skips the extra conversational
+      confirmation, not command approval prompts. Core restart approval
+      instructions remain.
+  file_transfer:
+    name: Terminal file transfer
+    description: >-
+      Enable uploads with trz and downloads with tsz. Leave off unless needed;
+      file transfer can interfere with long pastes.
+  memories:
+    name: Codex memories
+    description: >-
+      Enable Codex memories at startup. Off leaves any saved /memories choice
+      unchanged.
+  home_assistant_control:
+    name: Allow Home Assistant control actions
+    description: >-
+      Enable configuration checks and supported reloads through the helper.
+      This is not a security boundary for code inside the container.
+  allow_home_assistant_restart:
+    name: Allow Home Assistant Core restart
+    description: >-
+      Allow the helper to restart Core after a successful configuration check.
+      Requires control actions; not a security boundary for code inside the
+      container.

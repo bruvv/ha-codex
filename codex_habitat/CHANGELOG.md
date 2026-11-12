@@ -6,21 +6,21 @@ All notable changes to Codex Habitat are documented here.
 
 - Renamed the project to **Codex Habitat — OpenAI Codex for Home Assistant**, including scripts, image tags, documentation, and repository references.
 - Kept the existing Home Assistant add-on slug and persistent terminal session identity for compatibility with existing installations.
+- Fixed the initial terminal history limit and light theme colors.
+- Added readable Configuration labels and a single user guide; shortened the READMEs and removed the unrelated donation links.
+- Made automatic release notes concise and moved pending changes into each release once, without repeating them on later updates.
 
 ## 1.2.40
 
-- Updated the pinned Codex CLI from 0.167.1 to 0.167.2, including the version-matched `codex-code-mode-host` artifact. See the [Codex 0.167.2 release notes](https://github.com/openai/codex/releases/tag/rust-v0.167.2) for what changed.
-- Released automatically after the amd64 and aarch64 builds and smoke tests passed. Model choices and settings are unchanged.
+- Codex CLI 0.167.1 → [0.167.2](https://github.com/openai/codex/releases/tag/rust-v0.167.2).
 
 ## 1.2.39
 
-- Updated the pinned Codex CLI from 0.167.0 to 0.167.1, including the version-matched `codex-code-mode-host` artifact. See the [Codex 0.167.1 release notes](https://github.com/openai/codex/releases/tag/rust-v0.167.1) for what changed.
-- Released automatically after the amd64 and aarch64 builds and smoke tests passed. Model choices and settings are unchanged.
+- Codex CLI 0.167.0 → [0.167.1](https://github.com/openai/codex/releases/tag/rust-v0.167.1).
 
 ## 1.2.38
 
-- Updated the pinned Codex CLI from 0.166.0 to 0.167.0, including the version-matched `codex-code-mode-host` artifact. See the [Codex 0.167.0 release notes](https://github.com/openai/codex/releases/tag/rust-v0.167.0) for what changed.
-- Released automatically after the amd64 and aarch64 builds and smoke tests passed. Model choices and settings are unchanged.
+- Codex CLI 0.166.0 → [0.167.0](https://github.com/openai/codex/releases/tag/rust-v0.167.0).
 
 ## 1.2.37
 
@@ -29,18 +29,15 @@ All notable changes to Codex Habitat are documented here.
 
 ## 1.2.36
 
-- Updated the pinned Codex CLI from 0.165.0 to 0.166.0, including the version-matched `codex-code-mode-host` artifact. See the [Codex 0.166.0 release notes](https://github.com/openai/codex/releases/tag/rust-v0.166.0) for what changed.
-- Released automatically after the amd64 and aarch64 builds and smoke tests passed. Model choices and settings are unchanged.
+- Codex CLI 0.165.0 → [0.166.0](https://github.com/openai/codex/releases/tag/rust-v0.166.0).
 
 ## 1.2.35
 
-- Updated the pinned Codex CLI from 0.164.0 to 0.165.0, including the version-matched `codex-code-mode-host` artifact. See the [Codex 0.165.0 release notes](https://github.com/openai/codex/releases/tag/rust-v0.165.0) for what changed.
-- Released automatically after the amd64 and aarch64 builds and smoke tests passed. Model choices and settings are unchanged.
+- Codex CLI 0.164.0 → [0.165.0](https://github.com/openai/codex/releases/tag/rust-v0.165.0).
 
 ## 1.2.34
 
-- Updated the pinned Codex CLI from 0.163.0 to 0.164.0, including the version-matched `codex-code-mode-host` artifact. See the [Codex 0.164.0 release notes](https://github.com/openai/codex/releases/tag/rust-v0.164.0) for what changed.
-- Released automatically after the amd64 and aarch64 builds and smoke tests passed. Model choices and settings are unchanged.
+- Codex CLI 0.163.0 → [0.164.0](https://github.com/openai/codex/releases/tag/rust-v0.164.0).
 
 ## 1.2.33
 
@@ -48,33 +45,27 @@ All notable changes to Codex Habitat are documented here.
 
 ## 1.2.32
 
-- Updated the pinned Codex CLI from 0.162.1 to 0.163.0, including the version-matched `codex-code-mode-host` artifact. See the [Codex 0.163.0 release notes](https://github.com/openai/codex/releases/tag/rust-v0.163.0) for what changed.
-- Released automatically after the amd64 and aarch64 builds and smoke tests passed. Model choices and settings are unchanged.
+- Codex CLI 0.162.1 → [0.163.0](https://github.com/openai/codex/releases/tag/rust-v0.163.0).
 
 ## 1.2.31
 
-- Updated the pinned Codex CLI from 0.162.0 to 0.162.1, including the version-matched `codex-code-mode-host` artifact. See the [Codex 0.162.1 release notes](https://github.com/openai/codex/releases/tag/rust-v0.162.1) for what changed.
-- Released automatically after the amd64 and aarch64 builds and smoke tests passed. Model choices and settings are unchanged.
+- Codex CLI 0.162.0 → [0.162.1](https://github.com/openai/codex/releases/tag/rust-v0.162.1).
 
 ## 1.2.30
 
-- Updated the pinned Codex CLI from 0.161.0 to 0.162.0, including the version-matched `codex-code-mode-host` artifact. See the [Codex 0.162.0 release notes](https://github.com/openai/codex/releases/tag/rust-v0.162.0) for what changed.
-- Released automatically after the amd64 and aarch64 builds and smoke tests passed. Model choices and settings are unchanged.
+- Codex CLI 0.161.0 → [0.162.0](https://github.com/openai/codex/releases/tag/rust-v0.162.0).
 
 ## 1.2.29
 
-- Updated the pinned Codex CLI from 0.160.1 to 0.161.0, including the version-matched `codex-code-mode-host` artifact. See the [Codex 0.161.0 release notes](https://github.com/openai/codex/releases/tag/rust-v0.161.0) for what changed.
-- Released automatically after the amd64 and aarch64 builds and smoke tests passed. Model choices and settings are unchanged.
+- Codex CLI 0.160.1 → [0.161.0](https://github.com/openai/codex/releases/tag/rust-v0.161.0).
 
 ## 1.2.28
 
-- Updated the pinned Codex CLI from 0.160.0 to 0.160.1, including the version-matched `codex-code-mode-host` artifact. See the [Codex 0.160.1 release notes](https://github.com/openai/codex/releases/tag/rust-v0.160.1) for what changed.
-- Released automatically after the amd64 and aarch64 builds and smoke tests passed. Model choices and settings are unchanged.
+- Codex CLI 0.160.0 → [0.160.1](https://github.com/openai/codex/releases/tag/rust-v0.160.1).
 
 ## 1.2.27
 
-- Updated the pinned Codex CLI from 0.159.3 to 0.160.0, including the version-matched `codex-code-mode-host` artifact. See the [Codex 0.160.0 release notes](https://github.com/openai/codex/releases/tag/rust-v0.160.0) for what changed.
-- Released automatically after the amd64 and aarch64 builds and smoke tests passed. Model choices and settings are unchanged.
+- Codex CLI 0.159.3 → [0.160.0](https://github.com/openai/codex/releases/tag/rust-v0.160.0).
 
 ## 1.2.26
 
@@ -86,28 +77,23 @@ All notable changes to Codex Habitat are documented here.
 
 ## 1.2.25
 
-- Updated the pinned Codex CLI from 0.159.2 to 0.159.3, including the version-matched `codex-code-mode-host` artifact. See the [Codex 0.159.3 release notes](https://github.com/openai/codex/releases/tag/rust-v0.159.3) for what changed.
-- Released automatically after the amd64 and aarch64 builds and smoke tests passed. Model choices and settings are unchanged.
+- Codex CLI 0.159.2 → [0.159.3](https://github.com/openai/codex/releases/tag/rust-v0.159.3).
 
 ## 1.2.24
 
-- Updated the pinned Codex CLI from 0.159.1 to 0.159.2, including the version-matched `codex-code-mode-host` artifact. See the [Codex 0.159.2 release notes](https://github.com/openai/codex/releases/tag/rust-v0.159.2) for what changed.
-- Released automatically after the amd64 and aarch64 builds and smoke tests passed. Model choices and settings are unchanged.
+- Codex CLI 0.159.1 → [0.159.2](https://github.com/openai/codex/releases/tag/rust-v0.159.2).
 
 ## 1.2.23
 
-- Updated the pinned Codex CLI from 0.159.0 to 0.159.1, including the version-matched `codex-code-mode-host` artifact. See the [Codex 0.159.1 release notes](https://github.com/openai/codex/releases/tag/rust-v0.159.1) for what changed.
-- Released automatically after the amd64 and aarch64 builds and smoke tests passed. Model choices and settings are unchanged.
+- Codex CLI 0.159.0 → [0.159.1](https://github.com/openai/codex/releases/tag/rust-v0.159.1).
 
 ## 1.2.22
 
-- Updated the pinned Codex CLI from 0.158.0 to 0.159.0, including the version-matched `codex-code-mode-host` artifact. See the [Codex 0.159.0 release notes](https://github.com/openai/codex/releases/tag/rust-v0.159.0) for what changed.
-- Released automatically after the amd64 and aarch64 builds and smoke tests passed. Model choices and settings are unchanged.
+- Codex CLI 0.158.0 → [0.159.0](https://github.com/openai/codex/releases/tag/rust-v0.159.0).
 
 ## 1.2.21
 
-- Updated the pinned Codex CLI from 0.157.1 to 0.158.0, including the version-matched `codex-code-mode-host` artifact. See the [Codex 0.158.0 release notes](https://github.com/openai/codex/releases/tag/rust-v0.158.0) for what changed.
-- Released automatically after the amd64 and aarch64 builds and smoke tests passed. Model choices and settings are unchanged.
+- Codex CLI 0.157.1 → [0.158.0](https://github.com/openai/codex/releases/tag/rust-v0.158.0).
 
 ## 1.2.20
 
@@ -116,13 +102,11 @@ All notable changes to Codex Habitat are documented here.
 
 ## 1.2.19
 
-- Updated the pinned Codex CLI from 0.157.0 to 0.157.1, including the version-matched `codex-code-mode-host` artifact. See the [Codex 0.157.1 release notes](https://github.com/openai/codex/releases/tag/rust-v0.157.1) for what changed.
-- Released automatically after the amd64 build and smoke test passed. Model choices and settings are unchanged.
+- Codex CLI 0.157.0 → [0.157.1](https://github.com/openai/codex/releases/tag/rust-v0.157.1).
 
 ## 1.2.18
 
-- Updated the pinned Codex CLI from 0.156.1 to 0.157.0, including the version-matched `codex-code-mode-host` artifact. See the [Codex 0.157.0 release notes](https://github.com/openai/codex/releases/tag/rust-v0.157.0) for what changed.
-- Released automatically after the amd64 build and smoke test passed. Model choices and settings are unchanged.
+- Codex CLI 0.156.1 → [0.157.0](https://github.com/openai/codex/releases/tag/rust-v0.157.0).
 
 ## 1.2.17
 
@@ -280,7 +264,7 @@ All notable changes to Codex Habitat are documented here.
 ## 1.0.0
 
 - Released the first official stable version of Codex Habitat.
-- Refreshed the repository introduction and added a Buy Me a Coffee support link at the top of the GitHub README.
+- Refreshed the repository introduction.
 
 ## 0.1.29
 

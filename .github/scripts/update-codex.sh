@@ -66,16 +66,20 @@ addon_next="${major}.${minor}.$((patch + 1))"
 sed -i "s/^ARG CODEX_VERSION=\"${current}\"$/ARG CODEX_VERSION=\"${latest}\"/" "${DOCKERFILE}"
 sed -i "s/^version: \"${addon_current}\"$/version: \"${addon_next}\"/" "${CONFIG}"
 
-entry="$(cat <<EOF
-## ${addon_next}
-
-- Updated the pinned Codex CLI from ${current} to ${latest}, including the version-matched \`codex-code-mode-host\` artifact. See the [Codex ${latest} release notes](https://github.com/openai/codex/releases/tag/rust-v${latest}) for what changed.
-- Released automatically after the amd64 and aarch64 builds and smoke tests passed. Model choices and settings are unchanged.
-EOF
-)"
+entry="- Codex CLI ${current} → [${latest}](https://github.com/openai/codex/releases/tag/rust-v${latest})."
 changelog_updated="$(mktemp)"
-ENTRY="${entry}" awk '
-  !done && /^## / { print ENVIRON["ENTRY"]; print ""; done = 1 }
+# Move pending notes into this release once; leave an empty Unreleased section.
+ENTRY="${entry}" awk -v version="${addon_next}" '
+  !done && /^## / {
+    print "## Unreleased"
+    print ""
+    print "## " version
+    print ""
+    print ENVIRON["ENTRY"]
+    done = 1
+    if ($0 == "## Unreleased") next
+    print ""
+  }
   { print }
 ' "${CHANGELOG}" > "${changelog_updated}"
 cat "${changelog_updated}" > "${CHANGELOG}"

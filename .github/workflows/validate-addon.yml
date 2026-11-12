@@ -5,7 +5,7 @@ on:
     paths:
       - "codex_habitat/**"
       - ".github/workflows/validate-addon.yml"
-      - ".github/scripts/supervisor-options-fixture.cjs"
+      - ".github/scripts/**"
   # The Codex auto-update workflow dispatches this on its update branch before
   # releasing, since pushes made with GITHUB_TOKEN start no workflows. As its
   # own run, its checks carry the names main's ruleset requires.
@@ -68,6 +68,17 @@ jobs:
             --build-arg BUILD_VERSION="$addon_version" \
             --tag codex-habitat:pr-${{ github.event.pull_request.number || github.run_id }}-${{ matrix.arch }} \
             codex_habitat
+
+      - name: Test terminal settings and update notes
+        run: |
+          run_id="${{ github.event.pull_request.number || github.run_id }}"
+          image="codex-habitat:pr-${run_id}-${{ matrix.arch }}"
+          docker run --rm --network none \
+            --volume "$PWD:/repo:ro" --workdir /repo \
+            --entrypoint bash "$image" -ec '
+              bash .github/scripts/test-terminal-settings.sh
+              bash .github/scripts/test-update-codex.sh
+            '
 
       - name: Verify runtime dependencies
         env:
