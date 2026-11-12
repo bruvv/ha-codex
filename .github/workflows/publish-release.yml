@@ -1,4 +1,4 @@
-name: Publish HA Codex release
+name: Publish Codex Habitat release
 
 on:
   workflow_dispatch:

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Controlled Home Assistant Core actions for HA Codex. The Supervisor supplies
+# Controlled Home Assistant Core actions for Codex Habitat. The Supervisor supplies
 # the token and routes requests internally; the token is never printed.
 set -euo pipefail
 
@@ -7,7 +7,7 @@ readonly API_BASE="http://supervisor/core/api"
 
 usage() {
   cat <<'EOF'
-Usage: ha-codex-ha <command>
+Usage: codex-habitat-ha <command>
 
 Commands:
   status                         Check that the Home Assistant Core API is reachable.
@@ -16,14 +16,14 @@ Commands:
                                  Reload one supported Home Assistant configuration area.
   restart                        Validate configuration, then restart Home Assistant Core.
 
-Control actions must be enabled in the HA Codex add-on Configuration tab.
+Control actions must be enabled in the Codex Habitat add-on Configuration tab.
 Core restart additionally requires "Allow Home Assistant Core restart".
 EOF
 }
 
 require_control() {
-  if [ "${HA_CODEX_HOME_ASSISTANT_CONTROL:-false}" != "true" ]; then
-    printf '%s\n' 'Home Assistant control actions are disabled. Enable "Allow Home Assistant control actions" in HA Codex Configuration, then restart the add-on.' >&2
+  if [ "${CODEX_HABITAT_HOME_ASSISTANT_CONTROL:-false}" != "true" ]; then
+    printf '%s\n' 'Home Assistant control actions are disabled. Enable "Allow Home Assistant control actions" in Codex Habitat Configuration, then restart the add-on.' >&2
     exit 77
   fi
 }
@@ -34,7 +34,7 @@ api() {
   local payload="${3:-}"
 
   if [ -z "${SUPERVISOR_TOKEN:-}" ]; then
-    printf '%s\n' 'Home Assistant API access is unavailable. Restart HA Codex after installing this version.' >&2
+    printf '%s\n' 'Home Assistant API access is unavailable. Restart Codex Habitat after installing this version.' >&2
     exit 78
   fi
 
@@ -105,8 +105,8 @@ case "${1:-}" in
     ;;
   restart)
     require_control
-    if [ "${HA_CODEX_ALLOW_HOME_ASSISTANT_RESTART:-false}" != "true" ]; then
-      printf '%s\n' 'Core restart is disabled. Enable "Allow Home Assistant Core restart" in HA Codex Configuration, then restart the add-on.' >&2
+    if [ "${CODEX_HABITAT_ALLOW_HOME_ASSISTANT_RESTART:-false}" != "true" ]; then
+      printf '%s\n' 'Core restart is disabled. Enable "Allow Home Assistant Core restart" in Codex Habitat Configuration, then restart the add-on.' >&2
       exit 77
     fi
     check_config

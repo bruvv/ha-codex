@@ -12,9 +12,9 @@
 # and addon_version, to GITHUB_OUTPUT when it is set.
 set -euo pipefail
 
-readonly DOCKERFILE="home_assistant_codex_app/Dockerfile"
-readonly CONFIG="home_assistant_codex_app/config.yaml"
-readonly CHANGELOG="home_assistant_codex_app/CHANGELOG.md"
+readonly DOCKERFILE="codex_habitat/Dockerfile"
+readonly CONFIG="codex_habitat/config.yaml"
+readonly CHANGELOG="codex_habitat/CHANGELOG.md"
 readonly OUTPUT="${GITHUB_OUTPUT:-/dev/null}"
 
 current="$(sed -n 's/^ARG CODEX_VERSION="\(.*\)"$/\1/p' "${DOCKERFILE}")"

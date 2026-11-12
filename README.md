@@ -1,38 +1,38 @@
-# HA Codex
+# Codex Habitat
 
 [![Buy me a coffee](https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=Joshua.ambient.home&button_colour=40DCA5&font_colour=ffffff&font_family=Cookie&outline_colour=000000&coffee_colour=FFDD00)](https://www.buymeacoffee.com/Joshua.ambient.home)
 
-> ## **HA Codex** — OpenAI Codex for Home Assistant
+> ## **Codex Habitat** — OpenAI Codex for Home Assistant
 >
-> Work with Codex directly from your Home Assistant sidebar. HA Codex gives it
+> Work with Codex directly from your Home Assistant sidebar. Codex Habitat gives it
 > focused, read/write access to your configuration so it can review and improve
 > YAML, dashboards, automations, scripts, packages, custom components, and
 > documentation—while you stay in control of every change.
 
 > [!CAUTION]
-> HA Codex can modify your Home Assistant configuration. Make a Home Assistant
+> Codex Habitat can modify your Home Assistant configuration. Make a Home Assistant
 > backup and review every proposed diff before approving a change.
 
 > [!IMPORTANT]
 > ## Enable Home Assistant reload and restart actions
 >
-> In **HA Codex → Configuration**, turn on **Allow Home Assistant control
-> actions**, then restart HA Codex. This enables configuration validation and
+> In **Codex Habitat → Configuration**, turn on **Allow Home Assistant control
+> actions**, then restart Codex Habitat. This enables configuration validation and
 > supported reload actions. To let Codex restart Home Assistant Core, separately
 > enable **Allow Home Assistant Core restart**. Both settings are off by
 > default; no token, IP address, or host setup is required.
 
-## HA Codex in use
+## Codex Habitat in use
 
 This real, privacy-safe workspace capture shows Codex reading a Home Assistant
 configuration file. It also shows the optional MCP warning discussed below;
 normal file access and Codex operation continue as expected.
 
-![HA Codex reading a Home Assistant configuration](assets/screenshots/ha-codex-workspace.png)
+![Codex Habitat reading a Home Assistant configuration](assets/screenshots/codex-habitat-workspace.png)
 
 ## What it is — and is not
 
-| HA Codex is | HA Codex is not |
+| Codex Habitat is | Codex Habitat is not |
 | --- | --- |
 | A coding workspace with read/write access to `/config` | A replacement for Home Assistant Assist |
 | A way to have Codex inspect and propose edits to your files | An unattended administrator that should make changes without review |
@@ -45,28 +45,28 @@ allowlisted helper.
 
 ## Install
 
-[![Add HA Codex repository to Home Assistant](https://my.home-assistant.io/badges/supervisor.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fambient-home-systems%2Fha-codex)
-[![Latest release](https://img.shields.io/github/v/release/ambient-home-systems/ha-codex?label=version&sort=semver)](https://github.com/ambient-home-systems/ha-codex/releases/latest)
+[![Add Codex Habitat repository to Home Assistant](https://my.home-assistant.io/badges/supervisor.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fbruvv%2Fcodex-habitat)
+[![Latest release](https://img.shields.io/github/v/release/bruvv/codex-habitat?label=version&sort=semver)](https://github.com/bruvv/codex-habitat/releases/latest)
 
-1. Select the button above to open your Home Assistant instance with the HA
-   Codex repository URL pre-filled, then add the repository.
+1. Select the button above to open your Home Assistant instance with the
+   Codex Habitat repository URL pre-filled, then add the repository.
 2. Open **Settings → Apps → App Store**.
-3. Find **HA Codex**, then select **Install** and **Start**.
-4. Enable **Show in sidebar**, then open **HA Codex** from the sidebar.
+3. Find **Codex Habitat**, then select **Install** and **Start**.
+4. Enable **Show in sidebar**, then open **Codex Habitat** from the sidebar.
 
 If the button does not open your Home Assistant instance, open the App Store
 and use its repository-management option to add:
 
 ```text
-https://github.com/ambient-home-systems/ha-codex
+https://github.com/bruvv/codex-habitat
 ```
 
 ## First-time sign-in
 
-On its first launch, HA Codex shows a two-option sign-in menu. Use a ChatGPT
+On its first launch, Codex Habitat shows a two-option sign-in menu. Use a ChatGPT
 account that has access to Codex for Device Code sign-in; ChatGPT subscription
 access and OpenAI API billing are separate. After updating from an earlier
-version, restart HA Codex to begin this revised sign-in flow in a fresh session.
+version, restart Codex Habitat to begin this revised sign-in flow in a fresh session.
 
 ### 1. Log in with a different device (Preferred Method)
 
@@ -95,7 +95,7 @@ an issue, screenshot, chat, or repository file.
 
 ## Model choice
 
-HA Codex defaults to **GPT-6.1 Sol** with **xhigh** reasoning effort. If GPT-6.1
+Codex Habitat defaults to **GPT-6.1 Sol** with **xhigh** reasoning effort. If GPT-6.1
 Sol is not available on your account, pick another model. The Configuration
 tab offers the following model choices:
 
@@ -117,7 +117,7 @@ Codex changes the model of the active session immediately. Codex saves that
 choice, but the Configuration setting replaces it on the next start. To keep
 the model you pick with `/model` instead, set **Model** to `default`; also set
 **Reasoning effort** to `default` to keep the effort you pick there. After
-changing the add-on setting, restart HA Codex; with session persistence on, this
+changing the add-on setting, restart Codex Habitat; with session persistence on, this
 also opens the matching model-specific terminal session. Availability depends on your
 account, sign-in method, workspace settings, and rollout. Adding a choice here
 does not grant access to it. Check `/model` in an authenticated session for the
@@ -125,8 +125,8 @@ choices available to your account, or see the [official Codex model guidance](ht
 
 ## Add-on settings
 
-Open **HA Codex → Configuration** in Home Assistant and select the model you
-want before starting HA Codex. Restart the add-on after changing a setting.
+Open **Codex Habitat → Configuration** in Home Assistant and select the model you
+want before starting Codex Habitat. Restart the add-on after changing a setting.
 
 | Setting | Default | What it does |
 | --- | --- | --- |
@@ -135,25 +135,25 @@ want before starting HA Codex. Restart the add-on after changing a setting.
 | **Terminal font size** | 14 | Changes the terminal text size (10–24). |
 | **Terminal scrollback** | 5,000 lines | Sets how much past terminal output is retained (1,000–50,000 lines) in both the browser and persistent terminal session, including output produced immediately after startup. 5,000 is a practical balance. |
 | **Terminal theme** | Dark | Selects the terminal color theme. |
-| **Session persistence** | On | Keeps the active Codex session running while you navigate to another Home Assistant page, then reattaches it when you return to the HA Codex sidebar. |
+| **Session persistence** | On | Keeps the active Codex session running while you navigate to another Home Assistant page, then reattaches it when you return to the Codex Habitat sidebar. |
 | **Preserve terminal history** | On | Retains the browser's visible scrollbar and long inline transcript while the persistent session runs in the background. This is recommended. |
 | **Patch compatibility mode** | On | Lets Codex use its normal patch mechanism on Home Assistant OS, whose nested Bubblewrap restriction would otherwise force a shell-edit fallback. Command approval behavior is unchanged. |
 | **Skip command approvals** | Off | "YOLO mode". New Codex sessions run commands and edit files without asking you first, including Home Assistant reloads and restarts when control actions are enabled. Turn it on only if you review Codex's changes afterwards and keep backups. When off, Codex asks as usual. |
 | **Confirm reload actions** | On | Turn off to let Codex explain and perform supported reloads for user-requested changes without an extra conversational confirmation. Core restarts still require approval, and Codex's own command approval policy is unchanged. |
 | **Codex memories** | Off | Starts new Codex sessions with the Codex memories feature enabled, so Codex can carry useful details between sessions. When off, any choice made with `/memories` in Codex still applies. |
 | **Terminal file transfer** | Off | Enables `trz`/`tsz` so you can upload files to the terminal and download them back. Leave it off unless you need it, because it can interfere with pasting long text. |
-| **Allow Home Assistant control actions** | Off | Lets Codex validate configuration and request only the supported reload actions through HA Codex's restricted helper. |
+| **Allow Home Assistant control actions** | Off | Lets Codex validate configuration and request only the supported reload actions through Codex Habitat's restricted helper. |
 | **Allow Home Assistant Core restart** | Off | Lets the helper restart Core only after a successful configuration check. Requires Home Assistant control actions to be enabled. |
 
 ### Home Assistant reload and restart actions
 
-HA Codex can optionally validate configuration, reload selected configuration
+Codex Habitat can optionally validate configuration, reload selected configuration
 areas, and restart Home Assistant Core. This works entirely inside Home
 Assistant: no IP address, long-lived token, host terminal, Docker access, or
 additional installation is required.
 
 To enable it, turn on **Allow Home Assistant control actions** in
-**HA Codex → Configuration**, then restart the add-on. To permit Core restarts
+**Codex Habitat → Configuration**, then restart the add-on. To permit Core restarts
 as well, explicitly turn on **Allow Home Assistant Core restart**. Both are off
 by default. Codex explains each action and normally asks for confirmation
 before a reload or restart. Turn off **Confirm reload actions** to skip an
@@ -162,7 +162,7 @@ changes. Core restarts still require approval. This option does not override
 Codex's underlying command approval policy; **Skip command approvals** is the
 separate global setting that disables command approvals.
 
-The built-in `ha-codex-ha` helper supports a configuration check; reloads for
+The built-in `codex-habitat-ha` helper supports a configuration check; reloads for
 automations, scripts, scenes, groups, templates, Core configuration, and
 Lovelace resources; and a validated Core restart. It does not provide host,
 Docker, Supervisor, update, shutdown, or arbitrary Home Assistant service
@@ -174,7 +174,7 @@ or storage configuration.
 
 A mode chosen with `/approvals` inside Codex only lasts for the running
 session. To keep "never ask" across restarts, turn on **Skip command
-approvals** in **HA Codex → Configuration** and restart the add-on. Codex then
+approvals** in **Codex Habitat → Configuration** and restart the add-on. Codex then
 runs commands and reloads or restarts Home Assistant (if control actions are
 enabled) without asking first; the helper still requires a passing
 configuration check before a Core restart. Take a backup before using it.
@@ -195,14 +195,14 @@ scrollback** only if 5,000 lines is genuinely not enough.
 Leave **Patch compatibility mode** enabled (the default). Home Assistant OS
 blocks the nested unprivileged Bubblewrap namespace that Codex normally uses
 for patches, which can otherwise make Codex say that the normal patch mechanism
-is unavailable before it edits any file. This mode uses HA Codex's existing
+is unavailable before it edits any file. This mode uses Codex Habitat's existing
 add-on container boundary instead, so normal patches work without host, Docker,
 or Supervisor-management access. It does not change Codex's command-approval
 behavior. Turn it off only when diagnosing a sandbox-related issue.
 
 ## Copy and paste in the terminal
 
-HA Codex runs in a browser terminal, so the clipboard habits from a desktop
+Codex Habitat runs in a browser terminal, so the clipboard habits from a desktop
 terminal app do not all carry over. Two things catch most people:
 
 - **Ctrl+C is not copy.** The terminal sends it to Codex as an interrupt: it
@@ -240,7 +240,7 @@ The same shortcuts work on Linux and ChromeOS.
   without holding a key (tmux copies it to its own buffer), then press
   **Ctrl-b** followed by **]** to paste it at the Codex prompt.
 - If long pastes arrive garbled, make sure **Terminal file transfer** is off in
-  **HA Codex → Configuration**. It routes terminal input through a file-drop
+  **Codex Habitat → Configuration**. It routes terminal input through a file-drop
   handler that can interfere with large pastes.
 - On Home Assistant's iOS and Android apps and other touch browsers, use the
   standard long-press selection and paste gestures.
@@ -271,21 +271,21 @@ Review automations.yaml for duplicate triggers and risky conditions. Do not chan
 
 You may see an MCP warning on startup, such as a `dataAnalyticsWidgets` client
 failure. This is an optional Codex plugin/client startup message, not a Home
-Assistant or HA Codex failure. If `codex mcp list` reports that no MCP servers
+Assistant or Codex Habitat failure. If `codex mcp list` reports that no MCP servers
 are configured and Codex can read your files, **you can safely ignore it**. It
 does not affect normal Codex prompts, terminal commands, or access to your Home
 Assistant configuration.
 
 ### `[features].memory_tool` is deprecated
 
-Codex renamed this setting to `[features].memories`. HA Codex 1.2.14 and later
+Codex renamed this setting to `[features].memories`. Codex Habitat 1.2.14 and later
 renames the old key in its saved Codex configuration when the add-on starts, so
 restart the add-on once to clear the warning. To turn memories on from the
 add-on, enable **Codex memories** in the Configuration tab.
 
 ### Sandbox / Bubblewrap warning
 
-HA Codex 0.1.4 and later includes Bubblewrap. Update the add-on if you see an
+Codex Habitat 0.1.4 and later includes Bubblewrap. Update the add-on if you see an
 older sandbox warning. If it remains after updating, restart the add-on once;
 normal Codex operation is not blocked by the fallback sandbox message.
 
@@ -293,11 +293,11 @@ normal Codex operation is not blocked by the fallback sandbox message.
 
 Every release has three matching records:
 
-- The add-on version in `home_assistant_codex_app/config.yaml`.
-- User-facing Home Assistant update notes in the [changelog](home_assistant_codex_app/CHANGELOG.md).
-- A tagged [GitHub Release](https://github.com/ambient-home-systems/ha-codex/releases).
+- The add-on version in `codex_habitat/config.yaml`.
+- User-facing Home Assistant update notes in the [changelog](codex_habitat/CHANGELOG.md).
+- A tagged [GitHub Release](https://github.com/bruvv/codex-habitat/releases).
 
-Maintainers publish the release by running the **Publish HA Codex release**
+Maintainers publish the release by running the **Publish Codex Habitat release**
 workflow from the Actions tab after the version bump reaches `main`. It tags the
 version-bump commit and uses that version's changelog section as the notes.
 
@@ -305,7 +305,7 @@ Codex CLI updates are released automatically. Every 6 hours the **Update
 Codex CLI** workflow checks for a newer stable Codex CLI release. When one
 exists, it pins that version in the add-on's `Dockerfile`, bumps its patch version,
 adds a changelog entry, and runs the amd64 and aarch64 builds and smoke tests on a
-`codex-update/<version>` branch. The tests run as a separate **HA Codex image
+`codex-update/<version>` branch. The tests run as a separate **Codex Habitat image
 validation** run, so the commit carries the `Build and smoke-test amd64 add-on`
 and `Build and smoke-test aarch64 add-on` checks that `main` requires. If the
 test passes, it fast-forwards `main` and
@@ -319,8 +319,8 @@ installing to read the changelog.
 
 ## Contributing
 
-Please review and understand every proposed change before submitting it. If HA
-Codex is ever contributed to an Open Home Foundation project, the contributor
+Please review and understand every proposed change before submitting it. If
+Codex Habitat is ever contributed to an Open Home Foundation project, the contributor
 must personally review and own the work and all communication with maintainers;
 do not use an autonomous agent to submit issues, pull requests, or responses.
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details.

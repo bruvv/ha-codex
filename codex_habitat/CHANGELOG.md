@@ -1,6 +1,11 @@
 # Changelog
 
-All notable changes to HA Codex are documented here.
+All notable changes to Codex Habitat are documented here.
+
+## Unreleased
+
+- Renamed the project to **Codex Habitat — OpenAI Codex for Home Assistant**, including scripts, image tags, documentation, and repository references.
+- Kept the existing Home Assistant add-on slug and persistent terminal session identity for compatibility with existing installations.
 
 ## 1.2.40
 
@@ -20,7 +25,7 @@ All notable changes to HA Codex are documented here.
 ## 1.2.37
 
 - Added `gpt-6.1-terra` (GPT-6.1 Terra) to the model selector. It has been in the built-in model list of the pinned Codex CLI since 0.165.0, and OpenAI describes it as a fast, efficient model for clear writing, visual understanding, and computer use. It supports reasoning effort up to `ultra`. Availability depends on the account, sign-in method, workspace settings, and rollout.
-- Moved the build settings from `build.yaml` into the `Dockerfile`. Home Assistant retired `build.yaml` in April 2026, and Supervisor logged a deprecation warning every time it built HA Codex; a future Supervisor release will stop reading the file. The image is still built on Alpine 3.23, now through Home Assistant's multi-arch `ghcr.io/home-assistant/base:3.23` image, and the ttyd, trzsz, and Codex CLI versions are unchanged. Settings are unchanged.
+- Moved the build settings from `build.yaml` into the `Dockerfile`. Home Assistant retired `build.yaml` in April 2026, and Supervisor logged a deprecation warning every time it built Codex Habitat; a future Supervisor release will stop reading the file. The image is still built on Alpine 3.23, now through Home Assistant's multi-arch `ghcr.io/home-assistant/base:3.23` image, and the ttyd, trzsz, and Codex CLI versions are unchanged. Settings are unchanged.
 
 ## 1.2.36
 
@@ -39,7 +44,7 @@ All notable changes to HA Codex are documented here.
 
 ## 1.2.33
 
-- Removed `gpt-5.5` from the model selector. Its retirement from Codex with ChatGPT sign-in was scheduled for October 14, 2026. If it is saved in your Configuration tab, choose another model (GPT-6 Sol is Codex's suggested replacement) or `default` before starting HA Codex. API-key users can still choose GPT-5.5 with `/model` and keep it across restarts by setting **Model** to `default`.
+- Removed `gpt-5.5` from the model selector. Its retirement from Codex with ChatGPT sign-in was scheduled for October 14, 2026. If it is saved in your Configuration tab, choose another model (GPT-6 Sol is Codex's suggested replacement) or `default` before starting Codex Habitat. API-key users can still choose GPT-5.5 with `/model` and keep it across restarts by setting **Model** to `default`.
 
 ## 1.2.32
 
@@ -77,7 +82,7 @@ All notable changes to HA Codex are documented here.
 - Added a `default` choice to the **Model** option. It starts Codex without `--model`, so the model you pick with `/model` (saved in Codex's `config.toml`) is kept across add-on restarts instead of being replaced by the Configuration setting. With no saved model, Codex uses its own default. Set **Reasoning effort** to `default` as well to keep the effort you pick with `/model`; otherwise the reasoning-effort check applies to the saved model.
 - Updated the model documentation: GPT-6 Sol is now the previous-generation Sol, and Codex suggests GPT-6 Sol or GPT-6 Luna in place of the GPT-5.6 models.
 - Changed the default model from `gpt-6-luna` to `gpt-6.1-sol`, which Codex now ranks first. This only applies to new installs; existing installs keep the model already saved in their Configuration tab.
-- Removed `gpt-5.6` and `gpt-5.3-codex-spark` from the selector because they are no longer in Codex's built-in model list. If one of them is saved in your Configuration tab, choose another model (or `default`) before starting HA Codex.
+- Removed `gpt-5.6` and `gpt-5.3-codex-spark` from the selector because they are no longer in Codex's built-in model list. If one of them is saved in your Configuration tab, choose another model (or `default`) before starting Codex Habitat.
 
 ## 1.2.25
 
@@ -106,7 +111,7 @@ All notable changes to HA Codex are documented here.
 
 ## 1.2.20
 
-- Added support for the `aarch64` architecture, so HA Codex now installs on 64-bit Arm hosts such as the Raspberry Pi 4 and 5, Home Assistant Green, Home Assistant Yellow, and ODROID-N2+. Codex CLI, `codex-code-mode-host`, ttyd, and trzsz are downloaded as their native Arm builds.
+- Added support for the `aarch64` architecture, so Codex Habitat now installs on 64-bit Arm hosts such as the Raspberry Pi 4 and 5, Home Assistant Green, Home Assistant Yellow, and ODROID-N2+. Codex CLI, `codex-code-mode-host`, ttyd, and trzsz are downloaded as their native Arm builds.
 - Every release is now built and smoke-tested on both amd64 and aarch64 before it is published. Model choices and settings are unchanged.
 
 ## 1.2.19
@@ -121,7 +126,7 @@ All notable changes to HA Codex are documented here.
 
 ## 1.2.17
 
-- Added `max` and `ultra` to the **Reasoning effort** option. `ultra` is available on GPT-6 Astra, GPT-6 Sol, GPT-5.6 Terra, and GPT-5.6 Sol, and `max` on those models plus GPT-6 Luna and GPT-5.6 Luna, matching Codex's model catalog. If the selected model does not offer the chosen level, HA Codex starts the session with the model's highest level instead (for example `xhigh` for GPT-5.5) and says so in the add-on log. The default stays `xhigh`, and existing installs keep their saved choice.
+- Added `max` and `ultra` to the **Reasoning effort** option. `ultra` is available on GPT-6 Astra, GPT-6 Sol, GPT-5.6 Terra, and GPT-5.6 Sol, and `max` on those models plus GPT-6 Luna and GPT-5.6 Luna, matching Codex's model catalog. If the selected model does not offer the chosen level, Codex Habitat starts the session with the model's highest level instead (for example `xhigh` for GPT-5.5) and says so in the add-on log. The default stays `xhigh`, and existing installs keep their saved choice.
 
 ## 1.2.16
 
@@ -156,13 +161,13 @@ All notable changes to HA Codex are documented here.
 - Updated the pinned Codex CLI from 0.153.4 to 0.154.0, including the version-matched `codex-code-mode-host` artifact.
 - Picked up Codex's inline questions, so a question can be answered while Codex keeps working without losing an in-progress draft, plus Vim replace mode with undo and improved Escape handling in the terminal editor.
 - Picked up Codex fixes for plugin tool refresh, MCP OAuth coordination, workspace trust verification, permission preservation when resuming or forking a session, and conversation resumption conflicts.
-- Note: Codex removed the `codex mcp-server` command in this release. HA Codex never invoked it, so add-on behavior is unchanged, but any personal script that called it needs updating.
-- `gpt-5.6-terra` remains the HA Codex default and the model selector is unchanged.
+- Note: Codex removed the `codex mcp-server` command in this release. Codex Habitat never invoked it, so add-on behavior is unchanged, but any personal script that called it needs updating.
+- `gpt-5.6-terra` remains the Codex Habitat default and the model selector is unchanged.
 
 ## 1.2.10
 
 - Updated the pinned Codex CLI from 0.152.0 to 0.153.4, including the version-matched `codex-code-mode-host` artifact.
-- Included Codex's Astra model-picker visibility fix and updated Astra tool guidance while keeping `gpt-5.6-terra` as the HA Codex default.
+- Included Codex's Astra model-picker visibility fix and updated Astra tool guidance while keeping `gpt-5.6-terra` as the Codex Habitat default.
 - Updated amd64 validation to read its image base and dependency versions directly from `build.yaml`, preventing the test workflow from drifting from the release pin.
 
 ## 1.2.9
@@ -175,7 +180,7 @@ All notable changes to HA Codex are documented here.
 
 - Included the version-matched `codex-code-mode-host`, fixing local workspace and image-inspection tools that failed because the host executable was absent.
 - Added Node.js so Node-based plugin MCP servers, including `dataAnalyticsWidgets`, can start. npm is not installed because these servers use the bundled runtime files directly.
-- Cloudflare MCP authentication remains a separate, optional, user-configured action; HA Codex does not authenticate it automatically.
+- Cloudflare MCP authentication remains a separate, optional, user-configured action; Codex Habitat does not authenticate it automatically.
 
 ## 1.2.7
 
@@ -274,7 +279,7 @@ All notable changes to HA Codex are documented here.
 
 ## 1.0.0
 
-- Released the first official stable version of HA Codex.
+- Released the first official stable version of Codex Habitat.
 - Refreshed the repository introduction and added a Buy Me a Coffee support link at the top of the GitHub README.
 
 ## 0.1.29
@@ -284,7 +289,7 @@ All notable changes to HA Codex are documented here.
 
 ## 0.1.28
 
-- Made session persistence work with the default inline-history mode, so Codex stays running when you leave the HA Codex sidebar and reattaches when you return.
+- Made session persistence work with the default inline-history mode, so Codex stays running when you leave the Codex Habitat sidebar and reattaches when you return.
 - Preserved the browser's visible scrollbar and mouse-wheel behavior while using the persistent terminal session.
 - Reduced the default terminal scrollback from 10,000 to 5,000 lines; both session persistence and history preservation remain enabled by default.
 
@@ -295,7 +300,7 @@ All notable changes to HA Codex are documented here.
 ## 0.1.26
 
 - Added opt-in, built-in Home Assistant control actions with no user-managed token, IP address, or host setup.
-- Added the restricted `ha-codex-ha` helper for configuration validation, selected reload actions, and a validated Home Assistant Core restart.
+- Added the restricted `codex-habitat-ha` helper for configuration validation, selected reload actions, and a validated Home Assistant Core restart.
 - Added separate disabled-by-default controls for Home Assistant actions and Core restart, plus Codex instructions to explain and request approval before using them.
 
 ## 0.1.25
@@ -331,12 +336,12 @@ All notable changes to HA Codex are documented here.
 
 ## 0.1.19
 
-- Replaced Codex's three-choice first-run login screen with an HA Codex sign-in menu.
+- Replaced Codex's three-choice first-run login screen with an Codex Habitat sign-in menu.
 - Made **Sign in with Device Code (Preferred Method)** option 1 and kept API-key sign-in as option 2.
 
 ## 0.1.18
 
-- Put model selection first in the Home Assistant Apps description and setup guidance, directing users to App Configuration before starting HA Codex.
+- Put model selection first in the Home Assistant Apps description and setup guidance, directing users to App Configuration before starting Codex Habitat.
 
 ## 0.1.17
 
@@ -385,8 +390,8 @@ All notable changes to HA Codex are documented here.
 
 ## 0.1.8
 
-- Updated the repository URL to `ambient-home-systems/ha-codex` after the repository rename.
-- Replaced the illustrated README images with a privacy-safe, real HA Codex workspace screenshot.
+- Updated the repository URL to `bruvv/codex-habitat` after the repository rename.
+- Replaced the illustrated README images with a privacy-safe, real Codex Habitat workspace screenshot.
 
 ## 0.1.7
 
@@ -407,7 +412,7 @@ All notable changes to HA Codex are documented here.
 
 ## 0.1.3
 
-- Renamed the visible app and sidebar label to **HA Codex**.
+- Renamed the visible app and sidebar label to **Codex Habitat**.
 
 ## 0.1.2
 

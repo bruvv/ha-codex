@@ -1,9 +1,9 @@
-name: HA Codex image validation
+name: Codex Habitat image validation
 
 on:
   pull_request:
     paths:
-      - "home_assistant_codex_app/**"
+      - "codex_habitat/**"
       - ".github/workflows/validate-addon.yml"
       - ".github/scripts/supervisor-options-fixture.cjs"
   # The Codex auto-update workflow dispatches this on its update branch before
@@ -37,7 +37,7 @@ jobs:
       - name: Read pinned build configuration
         id: build_config
         run: |
-          app_dir="home_assistant_codex_app"
+          app_dir="codex_habitat"
           # Home Assistant retired build.yaml; Supervisor warns when it finds one.
           if [ -e "$app_dir/build.yaml" ]; then
             echo "::error::$app_dir/build.yaml is deprecated. Keep build settings in the Dockerfile."
@@ -58,7 +58,7 @@ jobs:
       # BUILD_ARCH and BUILD_VERSION, so the Dockerfile's own defaults are tested.
       - name: Build pinned ${{ matrix.arch }} add-on image
         run: |
-          addon_version="$(sed -n 's/^version: "\(.*\)"$/\1/p' home_assistant_codex_app/config.yaml)"
+          addon_version="$(sed -n 's/^version: "\(.*\)"$/\1/p' codex_habitat/config.yaml)"
           test -n "$addon_version"
           docker buildx build \
             --load \
@@ -66,14 +66,14 @@ jobs:
             --platform ${{ matrix.platform }} \
             --build-arg BUILD_ARCH=${{ matrix.arch }} \
             --build-arg BUILD_VERSION="$addon_version" \
-            --tag ha-codex:pr-${{ github.event.pull_request.number || github.run_id }}-${{ matrix.arch }} \
-            home_assistant_codex_app
+            --tag codex-habitat:pr-${{ github.event.pull_request.number || github.run_id }}-${{ matrix.arch }} \
+            codex_habitat
 
       - name: Verify runtime dependencies
         env:
           EXPECTED_CODEX_VERSION: ${{ steps.build_config.outputs.codex_version }}
         run: |
-          image="ha-codex:pr-${{ github.event.pull_request.number || github.run_id }}-${{ matrix.arch }}"
+          image="codex-habitat:pr-${{ github.event.pull_request.number || github.run_id }}-${{ matrix.arch }}"
           docker run --rm --env EXPECTED_CODEX_VERSION --entrypoint /bin/sh "$image" -ec '
             command -v codex
             test -x /usr/local/bin/codex
@@ -91,7 +91,7 @@ jobs:
 
       - name: Verify image metadata
         run: |
-          image="ha-codex:pr-${{ github.event.pull_request.number || github.run_id }}-${{ matrix.arch }}"
+          image="codex-habitat:pr-${{ github.event.pull_request.number || github.run_id }}-${{ matrix.arch }}"
           test "$(docker image inspect "$image" --format '{{.Config.WorkingDir}}')" = "/homeassistant"
           test "$(docker image inspect "$image" --format '{{json .Config.Cmd}}')" = '["/run.sh"]'
           docker image inspect "$image" --format '{{json .Config.Healthcheck.Test}}' |
@@ -99,55 +99,55 @@ jobs:
 
       - name: Verify configured models and healthy add-on startup
         run: |
-          image="ha-codex:pr-${{ github.event.pull_request.number || github.run_id }}-${{ matrix.arch }}"
-          options_file="$RUNNER_TEMP/ha-codex-options.json"
+          image="codex-habitat:pr-${{ github.event.pull_request.number || github.run_id }}-${{ matrix.arch }}"
+          options_file="$RUNNER_TEMP/codex-habitat-options.json"
           printf '{}\n' > "$options_file"
 
           # Bashio reads options from Supervisor, not /data/options.json.
           # Supply only that read endpoint on an isolated CI network.
-          docker network create --internal ha-codex-smoke
+          docker network create --internal codex-habitat-smoke
           docker run --detach \
-            --name ha-codex-supervisor-fixture \
-            --network ha-codex-smoke --network-alias supervisor \
+            --name codex-habitat-supervisor-fixture \
+            --network codex-habitat-smoke --network-alias supervisor \
             --volume "$options_file:/data/options.json:ro" \
             --volume "$PWD/.github/scripts/supervisor-options-fixture.cjs:/fixture.cjs:ro" \
             --entrypoint node "$image" /fixture.cjs
 
           for attempt in $(seq 1 20); do
-            if docker exec ha-codex-supervisor-fixture curl --fail --silent http://127.0.0.1/addons/self/options/config; then
+            if docker exec codex-habitat-supervisor-fixture curl --fail --silent http://127.0.0.1/addons/self/options/config; then
               break
             fi
             sleep 1
           done
-          docker exec ha-codex-supervisor-fixture curl --fail --silent http://127.0.0.1/addons/self/options/config
+          docker exec codex-habitat-supervisor-fixture curl --fail --silent http://127.0.0.1/addons/self/options/config
 
-          default_model="$(awk '$1 == "model:" && $2 !~ /^list\(/ {print $2}' home_assistant_codex_app/config.yaml)"
+          default_model="$(awk '$1 == "model:" && $2 !~ /^list\(/ {print $2}' codex_habitat/config.yaml)"
           test -n "$default_model"
           # Each case is model:selected effort:effort the add-on should use.
           # "default" has no model saved in Codex here, so nothing is lowered.
           # The last one checks that a level the model lacks is lowered.
           for case in $(printf '%s\n' "$default_model:xhigh:xhigh" default:ultra:ultra gpt-6-astra:ultra:ultra gpt-6.1-sol:ultra:ultra gpt-6-sol:xhigh:xhigh gpt-6.1-terra:ultra:ultra gpt-6-luna:max:max gpt-6-luna:ultra:max | awk '!seen[$0]++'); do
             IFS=: read -r model effort expected_effort <<< "$case"
-            grep -E '^  model: list\(' home_assistant_codex_app/config.yaml | grep -F "$model"
-            grep -E '^  reasoning_effort: list\(' home_assistant_codex_app/config.yaml | grep -E "[(|]${effort}[|)]"
+            grep -E '^  model: list\(' codex_habitat/config.yaml | grep -F "$model"
+            grep -E '^  reasoning_effort: list\(' codex_habitat/config.yaml | grep -E "[(|]${effort}[|)]"
             printf '{"model":"%s","reasoning_effort":"%s","terminal_font_size":14,"terminal_scrollback":5000,"terminal_theme":"dark","session_persistence":true,"preserve_terminal_history":true,"patch_compatibility_mode":true,"skip_command_approvals":false,"file_transfer":false,"memories":false,"home_assistant_control":false,"allow_home_assistant_restart":false}\n' "$model" "$effort" > "$options_file"
-            docker run --detach --name ha-codex-runtime-smoke \
-              --network ha-codex-smoke "$image"
+            docker run --detach --name codex-habitat-runtime-smoke \
+              --network codex-habitat-smoke "$image"
 
             for attempt in $(seq 1 24); do
-              status="$(docker inspect ha-codex-runtime-smoke --format '{{if .State.Health}}{{.State.Health.Status}}{{else}}missing{{end}}')"
+              status="$(docker inspect codex-habitat-runtime-smoke --format '{{if .State.Health}}{{.State.Health.Status}}{{else}}missing{{end}}')"
               if [ "$status" = "healthy" ]; then
                 break
               fi
-              if [ "$status" = "unhealthy" ] || [ "$(docker inspect ha-codex-runtime-smoke --format '{{.State.Running}}')" != "true" ]; then
-                docker logs ha-codex-runtime-smoke
+              if [ "$status" = "unhealthy" ] || [ "$(docker inspect codex-habitat-runtime-smoke --format '{{.State.Running}}')" != "true" ]; then
+                docker logs codex-habitat-runtime-smoke
                 exit 1
               fi
               sleep 5
             done
 
-            test "$(docker inspect ha-codex-runtime-smoke --format '{{.State.Health.Status}}')" = "healthy"
-            logs="$(docker logs ha-codex-runtime-smoke 2>&1)"
+            test "$(docker inspect codex-habitat-runtime-smoke --format '{{.State.Health.Status}}')" = "healthy"
+            logs="$(docker logs codex-habitat-runtime-smoke 2>&1)"
             printf '%s\n' "$logs"
             printf '%s\n' "$logs" | grep -F "Using Codex model: ${model}."
             if [ "$model" = "default" ]; then
@@ -166,11 +166,11 @@ jobs:
             if printf '%s\n' "$logs" | grep -E 'ERROR:|Failed to get addon config'; then
               exit 1
             fi
-            docker rm --force ha-codex-runtime-smoke
+            docker rm --force codex-habitat-runtime-smoke
           done
 
       - name: Clean up runtime containers and network
         if: always()
         run: |
-          docker rm --force ha-codex-runtime-smoke ha-codex-supervisor-fixture 2>/dev/null || true
-          docker network rm ha-codex-smoke 2>/dev/null || true
+          docker rm --force codex-habitat-runtime-smoke codex-habitat-supervisor-fixture 2>/dev/null || true
+          docker network rm codex-habitat-smoke 2>/dev/null || true

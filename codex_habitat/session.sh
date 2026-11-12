@@ -3,24 +3,24 @@ set -u
 
 readonly MODEL="$1"
 readonly TERMINAL_MODE="$2"
-readonly HA_CODEX_INSTRUCTION_PREFIX='Home Assistant control is available only through the ha-codex-ha helper. For a requested configuration check, reload, or restart, explain the intended action and use ha-codex-ha rather than direct curl, ha, hass, systemctl, Docker, or SUPERVISOR_TOKEN access. '
+readonly CODEX_HABITAT_INSTRUCTION_PREFIX='Home Assistant control is available only through the codex-habitat-ha helper. For a requested configuration check, reload, or restart, explain the intended action and use codex-habitat-ha rather than direct curl, ha, hass, systemctl, Docker, or SUPERVISOR_TOKEN access. '
 # The add-on defaults to its existing confirmation behavior. Disabling the
 # extra reload confirmation never removes the Core restart safeguard.
-if [ "${HA_CODEX_CONFIRM_RELOAD_ACTIONS:-true}" = "false" ]; then
-  readonly HA_CODEX_APPROVAL_INSTRUCTIONS='For supported reloads needed to apply user-requested changes, briefly explain the action and proceed without asking for a separate confirmation. This does not override the Codex command approval policy. Always ask for approval before a Home Assistant Core restart.'
+if [ "${CODEX_HABITAT_CONFIRM_RELOAD_ACTIONS:-true}" = "false" ]; then
+  readonly CODEX_HABITAT_APPROVAL_INSTRUCTIONS='For supported reloads needed to apply user-requested changes, briefly explain the action and proceed without asking for a separate confirmation. This does not override the Codex command approval policy. Always ask for approval before a Home Assistant Core restart.'
 else
-  readonly HA_CODEX_APPROVAL_INSTRUCTIONS='Ask for command approval before any reload or restart.'
+  readonly CODEX_HABITAT_APPROVAL_INSTRUCTIONS='Ask for command approval before any reload or restart.'
 fi
-readonly HA_CODEX_INSTRUCTION_SUFFIX=' Run ha-codex-ha check before a Core restart; the helper enforces this too. Use ha-codex-ha --help to see the allowlisted actions. Dashboard configuration may require a browser refresh; dashboard-resources only reloads Lovelace resources.'
-readonly HA_CODEX_INSTRUCTIONS="${HA_CODEX_INSTRUCTION_PREFIX}${HA_CODEX_APPROVAL_INSTRUCTIONS}${HA_CODEX_INSTRUCTION_SUFFIX}"
-readonly HA_CODEX_CONFIG_OVERRIDE="developer_instructions=\"${HA_CODEX_INSTRUCTIONS}\""
+readonly CODEX_HABITAT_INSTRUCTION_SUFFIX=' Run codex-habitat-ha check before a Core restart; the helper enforces this too. Use codex-habitat-ha --help to see the allowlisted actions. Dashboard configuration may require a browser refresh; dashboard-resources only reloads Lovelace resources.'
+readonly CODEX_HABITAT_INSTRUCTIONS="${CODEX_HABITAT_INSTRUCTION_PREFIX}${CODEX_HABITAT_APPROVAL_INSTRUCTIONS}${CODEX_HABITAT_INSTRUCTION_SUFFIX}"
+readonly CODEX_HABITAT_CONFIG_OVERRIDE="developer_instructions=\"${CODEX_HABITAT_INSTRUCTIONS}\""
 
 cd /homeassistant
 
 if ! codex login status >/dev/null 2>&1; then
   clear
   printf '%s\n' \
-    'HA Codex sign in' \
+    'Codex Habitat sign in' \
     '' \
     '1. Sign in with Device Code (Preferred Method)' \
     '   Sign in from another device with a secure, one-time code.' \
@@ -65,7 +65,7 @@ fi
 # When terminal file transfer is enabled, remind users how to move files in and
 # out. Printed once before Codex starts; in inline mode it stays visible in the
 # scrollback above Codex. Skipped when the feature is off so it is not misleading.
-if [ "${HA_CODEX_FILE_TRANSFER:-false}" = "true" ]; then
+if [ "${CODEX_HABITAT_FILE_TRANSFER:-false}" = "true" ]; then
   if [ -n "${TMUX:-}" ]; then
     printf '%s\n\n' 'Attach a file: press Ctrl-b then u for an upload picker (or run "trz" in a shell). Download: "tsz <file>". You can also drag a file onto a shell prompt.'
   else
@@ -73,7 +73,7 @@ if [ "${HA_CODEX_FILE_TRANSFER:-false}" = "true" ]; then
   fi
 fi
 
-CODEX_ARGS=(--config "${HA_CODEX_CONFIG_OVERRIDE}")
+CODEX_ARGS=(--config "${CODEX_HABITAT_CONFIG_OVERRIDE}")
 
 # Home Assistant OS does not allow the nested unprivileged user namespace that
 # Codex's Bubblewrap sandbox needs. Without it, apply_patch fails while reading
@@ -88,20 +88,20 @@ CODEX_ARGS=(--config "${HA_CODEX_CONFIG_OVERRIDE}")
 # switched with /approvals, stays in workspace-write until Codex restarts. When
 # that happens, restart the add-on or choose Full Access in /approvals.
 # The setting remains available for troubleshooting.
-if [ "${HA_CODEX_PATCH_COMPATIBILITY_MODE:-true}" = "true" ]; then
+if [ "${CODEX_HABITAT_PATCH_COMPATIBILITY_MODE:-true}" = "true" ]; then
   CODEX_ARGS+=(--sandbox danger-full-access)
 fi
 
 # "YOLO mode": a mode chosen with /approvals lasts only for the running session,
 # so the add-on option is how a no-prompt policy survives restarts. When it is
 # off, nothing is passed, so approval_policy from config.toml still applies.
-if [ "${HA_CODEX_SKIP_COMMAND_APPROVALS:-false}" = "true" ]; then
+if [ "${CODEX_HABITAT_SKIP_COMMAND_APPROVALS:-false}" = "true" ]; then
   CODEX_ARGS+=(--ask-for-approval never)
 fi
 
 # Enable Codex memories when the add-on option is on. When it is off, nothing is
 # passed, so a setting the user made with /memories still applies.
-if [ "${HA_CODEX_MEMORIES:-false}" = "true" ]; then
+if [ "${CODEX_HABITAT_MEMORIES:-false}" = "true" ]; then
   CODEX_ARGS+=(--enable memories)
 fi
 
@@ -113,8 +113,8 @@ fi
 
 # "default" passes nothing, so the model's own default or a model_reasoning_effort
 # saved in config.toml applies. Any other value overrides it for new sessions.
-if [ -n "${HA_CODEX_REASONING_EFFORT:-}" ] && [ "${HA_CODEX_REASONING_EFFORT}" != "default" ]; then
-  CODEX_ARGS+=(--config "model_reasoning_effort=\"${HA_CODEX_REASONING_EFFORT}\"")
+if [ -n "${CODEX_HABITAT_REASONING_EFFORT:-}" ] && [ "${CODEX_HABITAT_REASONING_EFFORT}" != "default" ]; then
+  CODEX_ARGS+=(--config "model_reasoning_effort=\"${CODEX_HABITAT_REASONING_EFFORT}\"")
 fi
 
 if [ "${TERMINAL_MODE}" = "inline" ]; then

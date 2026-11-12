@@ -2,7 +2,7 @@
 set -euo pipefail
 
 readonly CODEX_DATA_DIR="/config/codex"
-readonly TERMINAL_INDEX="/tmp/ha-codex-terminal.html"
+readonly TERMINAL_INDEX="/tmp/codex-habitat-terminal.html"
 
 mkdir -p "${CODEX_DATA_DIR}"
 export CODEX_HOME="${CODEX_DATA_DIR}"
@@ -73,14 +73,14 @@ if [ "$(reasoning_effort_rank "${REASONING_EFFORT}")" -gt "$(reasoning_effort_ra
   REASONING_EFFORT="${MAX_REASONING_EFFORT}"
 fi
 
-export HA_CODEX_HOME_ASSISTANT_CONTROL="${HOME_ASSISTANT_CONTROL}"
-export HA_CODEX_ALLOW_HOME_ASSISTANT_RESTART="${ALLOW_HOME_ASSISTANT_RESTART}"
-export HA_CODEX_PATCH_COMPATIBILITY_MODE="${PATCH_COMPATIBILITY_MODE}"
-export HA_CODEX_SKIP_COMMAND_APPROVALS="${SKIP_COMMAND_APPROVALS}"
-export HA_CODEX_CONFIRM_RELOAD_ACTIONS="${CONFIRM_RELOAD_ACTIONS}"
-export HA_CODEX_FILE_TRANSFER="${FILE_TRANSFER}"
-export HA_CODEX_MEMORIES="${MEMORIES}"
-export HA_CODEX_REASONING_EFFORT="${REASONING_EFFORT}"
+export CODEX_HABITAT_HOME_ASSISTANT_CONTROL="${HOME_ASSISTANT_CONTROL}"
+export CODEX_HABITAT_ALLOW_HOME_ASSISTANT_RESTART="${ALLOW_HOME_ASSISTANT_RESTART}"
+export CODEX_HABITAT_PATCH_COMPATIBILITY_MODE="${PATCH_COMPATIBILITY_MODE}"
+export CODEX_HABITAT_SKIP_COMMAND_APPROVALS="${SKIP_COMMAND_APPROVALS}"
+export CODEX_HABITAT_CONFIRM_RELOAD_ACTIONS="${CONFIRM_RELOAD_ACTIONS}"
+export CODEX_HABITAT_FILE_TRANSFER="${FILE_TRANSFER}"
+export CODEX_HABITAT_MEMORIES="${MEMORIES}"
+export CODEX_HABITAT_REASONING_EFFORT="${REASONING_EFFORT}"
 
 # Codex renamed the memories feature flag from [features].memory_tool to
 # [features].memories and warns on every start while the old key remains.
@@ -133,12 +133,12 @@ if [ "${PERSIST}" = "true" ]; then
   # tmux preserves the live Codex process across Home Assistant navigation.
   # Its configuration is loaded before the server starts so mouse scrolling
   # enters copy mode rather than recalling commands at the prompt.
-  COMMAND="tmux -f /etc/ha-codex-tmux.conf set-option -g history-limit ${SCROLLBACK}; tmux -f /etc/ha-codex-tmux.conf new-session -A -s ${SESSION_NAME} '/usr/local/bin/ha-codex-session ${MODEL} ${TERMINAL_MODE}; exec bash -l'"
+  COMMAND="tmux -f /etc/codex-habitat-tmux.conf set-option -g history-limit ${SCROLLBACK}; tmux -f /etc/codex-habitat-tmux.conf new-session -A -s ${SESSION_NAME} '/usr/local/bin/codex-habitat-session ${MODEL} ${TERMINAL_MODE}; exec bash -l'"
 else
-  COMMAND="exec /usr/local/bin/ha-codex-session ${MODEL} ${TERMINAL_MODE}"
+  COMMAND="exec /usr/local/bin/codex-habitat-session ${MODEL} ${TERMINAL_MODE}"
 fi
 
-bashio::log.info "Starting HA Codex."
+bashio::log.info "Starting Codex Habitat."
 bashio::log.info "Using Codex model: ${MODEL}."
 if [ "${MODEL}" = "default" ]; then
   if [ -n "${SAVED_MODEL}" ]; then
@@ -152,7 +152,7 @@ if [ -n "${REQUESTED_REASONING_EFFORT:-}" ]; then
 fi
 bashio::log.info "Reasoning effort: ${REASONING_EFFORT}."
 bashio::log.info "Terminal history mode: ${TERMINAL_MODE}."
-bashio::log.info "First-time sign-in uses the HA Codex device-code method by default."
+bashio::log.info "First-time sign-in uses the Codex Habitat device-code method by default."
 if [ "${PATCH_COMPATIBILITY_MODE}" = "true" ]; then
   bashio::log.info "Patch compatibility mode: true (new Codex sessions start with sandbox danger-full-access)."
 else
@@ -187,8 +187,8 @@ if [ -n "${GZIP_OFFSET}" ]; then
 
   if [ -s "${TERMINAL_INDEX}" ] && grep -q '</html>' "${TERMINAL_INDEX}"; then
     sed -i "s/fontSize:13,/scrollback:${SCROLLBACK},fontSize:13,/" "${TERMINAL_INDEX}"
-    sed -i 's@</head>@<style id="ha-codex-history-rail-style">#terminal-container{padding-right:34px!important}.ha-codex-history-rail{position:fixed;z-index:1000;top:6px;right:4px;bottom:6px;width:28px;display:flex;flex-direction:column;gap:4px;padding:2px;box-sizing:border-box;background:#20242d;border-left:1px solid #63543a}.ha-codex-history-rail button{height:25px;padding:0;border:1px solid #6b5734;border-radius:5px;background:#3a3225;color:#f6c66f;font:700 17px/1 sans-serif}.ha-codex-history-track{position:relative;flex:1;min-height:44px;border-radius:6px;background:#15191f;touch-action:none;cursor:ns-resize}.ha-codex-history-thumb{position:absolute;left:3px;right:3px;top:3px;height:48px;border-radius:5px;background:#e6a23c;box-shadow:inset 0 0 0 1px rgba(255,255,255,.4)}</style></head>@' "${TERMINAL_INDEX}"
-    sed -i 's@</body>@<script id="ha-codex-history-rail-script">(()=>{let retry;const start=()=>{const term=window.term;if(!term){return}if(document.getElementById("ha-codex-history-rail")){clearInterval(retry);return}const rail=document.createElement("div");const up=document.createElement("button");const down=document.createElement("button");const track=document.createElement("div");const thumb=document.createElement("div");rail.id="ha-codex-history-rail";rail.className="ha-codex-history-rail";up.type="button";down.type="button";up.textContent="↑";down.textContent="↓";up.setAttribute("aria-label","Scroll terminal history up");down.setAttribute("aria-label","Scroll terminal history down");track.className="ha-codex-history-track";thumb.className="ha-codex-history-thumb";track.appendChild(thumb);rail.append(up,track,down);document.body.appendChild(rail);const send=delta=>{const el=term.element;if(el){el.dispatchEvent(new WheelEvent("wheel",{bubbles:true,cancelable:true,deltaY:delta}))}};const buffer=()=>term.buffer.active;const sync=()=>{const b=buffer();const range=b.baseY;const h=track.clientHeight;const th=Math.max(28,Math.min(h,h*((term.rows||1)/Math.max(b.length,1))));const space=Math.max(0,h-th);thumb.style.height=th+"px";thumb.style.transform="translateY("+(range?space*b.viewportY/range:0)+"px)"};const move=y=>{const b=buffer();const r=track.getBoundingClientRect();const f=Math.max(0,Math.min(1,(y-r.top)/r.height));if(b.baseY){term.scrollLines(Math.round(f*b.baseY)-b.viewportY)}else{send(f<.5?-360:360)}sync()};up.addEventListener("click",()=>{if(buffer().baseY){term.scrollLines(-20)}else{send(-360)}sync()});down.addEventListener("click",()=>{if(buffer().baseY){term.scrollLines(20)}else{send(360)}sync()});let drag=false;track.addEventListener("pointerdown",e=>{drag=true;track.setPointerCapture(e.pointerId);move(e.clientY);e.preventDefault()});track.addEventListener("pointermove",e=>{if(drag){move(e.clientY)}});track.addEventListener("pointerup",()=>{drag=false});track.addEventListener("pointercancel",()=>{drag=false});term.onScroll(sync);window.addEventListener("resize",sync);setInterval(sync,250);sync();clearInterval(retry)};retry=setInterval(start,100);start()})();</script></body>@' "${TERMINAL_INDEX}"
+    sed -i 's@</head>@<style id="codex-habitat-history-rail-style">#terminal-container{padding-right:34px!important}.codex-habitat-history-rail{position:fixed;z-index:1000;top:6px;right:4px;bottom:6px;width:28px;display:flex;flex-direction:column;gap:4px;padding:2px;box-sizing:border-box;background:#20242d;border-left:1px solid #63543a}.codex-habitat-history-rail button{height:25px;padding:0;border:1px solid #6b5734;border-radius:5px;background:#3a3225;color:#f6c66f;font:700 17px/1 sans-serif}.codex-habitat-history-track{position:relative;flex:1;min-height:44px;border-radius:6px;background:#15191f;touch-action:none;cursor:ns-resize}.codex-habitat-history-thumb{position:absolute;left:3px;right:3px;top:3px;height:48px;border-radius:5px;background:#e6a23c;box-shadow:inset 0 0 0 1px rgba(255,255,255,.4)}</style></head>@' "${TERMINAL_INDEX}"
+    sed -i 's@</body>@<script id="codex-habitat-history-rail-script">(()=>{let retry;const start=()=>{const term=window.term;if(!term){return}if(document.getElementById("codex-habitat-history-rail")){clearInterval(retry);return}const rail=document.createElement("div");const up=document.createElement("button");const down=document.createElement("button");const track=document.createElement("div");const thumb=document.createElement("div");rail.id="codex-habitat-history-rail";rail.className="codex-habitat-history-rail";up.type="button";down.type="button";up.textContent="↑";down.textContent="↓";up.setAttribute("aria-label","Scroll terminal history up");down.setAttribute("aria-label","Scroll terminal history down");track.className="codex-habitat-history-track";thumb.className="codex-habitat-history-thumb";track.appendChild(thumb);rail.append(up,track,down);document.body.appendChild(rail);const send=delta=>{const el=term.element;if(el){el.dispatchEvent(new WheelEvent("wheel",{bubbles:true,cancelable:true,deltaY:delta}))}};const buffer=()=>term.buffer.active;const sync=()=>{const b=buffer();const range=b.baseY;const h=track.clientHeight;const th=Math.max(28,Math.min(h,h*((term.rows||1)/Math.max(b.length,1))));const space=Math.max(0,h-th);thumb.style.height=th+"px";thumb.style.transform="translateY("+(range?space*b.viewportY/range:0)+"px)"};const move=y=>{const b=buffer();const r=track.getBoundingClientRect();const f=Math.max(0,Math.min(1,(y-r.top)/r.height));if(b.baseY){term.scrollLines(Math.round(f*b.baseY)-b.viewportY)}else{send(f<.5?-360:360)}sync()};up.addEventListener("click",()=>{if(buffer().baseY){term.scrollLines(-20)}else{send(-360)}sync()});down.addEventListener("click",()=>{if(buffer().baseY){term.scrollLines(20)}else{send(360)}sync()});let drag=false;track.addEventListener("pointerdown",e=>{drag=true;track.setPointerCapture(e.pointerId);move(e.clientY);e.preventDefault()});track.addEventListener("pointermove",e=>{if(drag){move(e.clientY)}});track.addEventListener("pointerup",()=>{drag=false});track.addEventListener("pointercancel",()=>{drag=false});term.onScroll(sync);window.addEventListener("resize",sync);setInterval(sync,250);sync();clearInterval(retry)};retry=setInterval(start,100);start()})();</script></body>@' "${TERMINAL_INDEX}"
     TTYD_INDEX_ARGS=(--index "${TERMINAL_INDEX}")
     bashio::log.info "Enabled terminal history rail."
   else

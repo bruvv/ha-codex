@@ -1,16 +1,16 @@
-# HA Codex
+# Codex Habitat
 
 Use OpenAI Codex in a Home Assistant sidebar workspace. The add-on starts a
 persistent web terminal in `/homeassistant`, which is your Home Assistant
 configuration directory.
 
-☕ [Support HA Codex and future Home Assistant add-on development](https://www.buymeacoffee.com/Joshua.ambient.home)
+☕ [Support Codex Habitat and future Home Assistant add-on development](https://www.buymeacoffee.com/Joshua.ambient.home)
 
 > [!IMPORTANT]
 > ## Enable Home Assistant reload and restart actions
 >
-> Open **HA Codex → Configuration**. Turn on **Allow Home Assistant control
-> actions**, then **restart HA Codex**. This enables configuration validation
+> Open **Codex Habitat → Configuration**. Turn on **Allow Home Assistant control
+> actions**, then **restart Codex Habitat**. This enables configuration validation
 > and supported reload actions. To let Codex restart Home Assistant Core, also
 > turn on **Allow Home Assistant Core restart**. Both settings are off by
 > default; no token, IP address, or host setup is required.
@@ -28,33 +28,33 @@ uses the supported internal Core API through a restricted helper.
 
 ## Install
 
-[![Add HA Codex repository to Home Assistant](https://my.home-assistant.io/badges/supervisor.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fambient-home-systems%2Fha-codex)
-[![Latest release](https://img.shields.io/github/v/release/ambient-home-systems/ha-codex?label=version&sort=semver)](https://github.com/ambient-home-systems/ha-codex/releases/latest)
+[![Add Codex Habitat repository to Home Assistant](https://my.home-assistant.io/badges/supervisor.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fbruvv%2Fcodex-habitat)
+[![Latest release](https://img.shields.io/github/v/release/bruvv/codex-habitat?label=version&sort=semver)](https://github.com/bruvv/codex-habitat/releases/latest)
 
-1. Select the button above to open your Home Assistant instance with the HA
-   Codex repository URL pre-filled, then add the repository.
+1. Select the button above to open your Home Assistant instance with the
+   Codex Habitat repository URL pre-filled, then add the repository.
 2. Open **Settings → Apps → App Store**.
-3. Find **HA Codex**, then select **Install** and **Start**.
-4. Enable **Show in sidebar**, then open **HA Codex** from the sidebar.
+3. Find **Codex Habitat**, then select **Install** and **Start**.
+4. Enable **Show in sidebar**, then open **Codex Habitat** from the sidebar.
 
 If the button does not open your Home Assistant instance, open the App Store
 and use its repository-management option to add:
 
 ```text
-https://github.com/ambient-home-systems/ha-codex
+https://github.com/bruvv/codex-habitat
 ```
 
 See the [changelog](CHANGELOG.md) for what changed in each release.
 
 ## First sign-in
 
-Open the sidebar item. Codex starts automatically. On first use, HA Codex
+Open the sidebar item. Codex starts automatically. On first use, Codex Habitat
 shows a two-option sign-in menu. After updating from an earlier version,
-restart HA Codex to begin this revised sign-in flow in a fresh session.
+restart Codex Habitat to begin this revised sign-in flow in a fresh session.
 
 1. **Log in with a different device (Preferred Method):** complete the secure,
    one-time code sign-in from a phone, tablet, or another computer, then return
-   to HA Codex. This is the supported ChatGPT sign-in method for HA Codex:
+   to Codex Habitat. This is the supported ChatGPT sign-in method for Codex Habitat:
    browser callbacks cannot reliably return from your device to Codex inside
    Home Assistant's isolated add-on container.
 2. **OpenAI API key** (only if the Codex sign-in screen offers it): this uses a
@@ -67,7 +67,7 @@ persists across restarts.
 
 ## Model choice
 
-HA Codex defaults to **GPT-6.1 Sol**, the latest Sol for complex coding and
+Codex Habitat defaults to **GPT-6.1 Sol**, the latest Sol for complex coding and
 everyday work, with **xhigh** reasoning effort. The Configuration tab also
 offers GPT-6 Astra (the hardest workflows), GPT-6 Sol, GPT-6.1 Terra (fast,
 efficient writing, visual understanding, and computer use), GPT-6 Luna (fast
@@ -88,8 +88,8 @@ account, or see the [official Codex model guidance](https://learn.chatgpt.com/do
 ## Add-on settings
 
 Select the model you want in the add-on's **Configuration** tab before
-starting HA Codex. Change any other settings there as needed, then restart HA
-Codex.
+starting Codex Habitat. Change any other settings there as needed, then restart
+Codex Habitat.
 
 | Setting | Default | What it does |
 | --- | --- | --- |
@@ -98,14 +98,14 @@ Codex.
 | **Terminal font size** | 14 | Sets terminal text size (10–24). |
 | **Terminal scrollback** | 5,000 lines | Keeps 1,000–50,000 lines of past terminal output in both the browser and persistent terminal session, including output produced immediately after startup. |
 | **Terminal theme** | Dark | Sets the terminal color theme. |
-| **Session persistence** | On | Keeps the active Codex session running when you leave HA Codex for another Home Assistant page, then reconnects it when you return. |
+| **Session persistence** | On | Keeps the active Codex session running when you leave Codex Habitat for another Home Assistant page, then reconnects it when you return. |
 | **Preserve terminal history** | On | Keeps the visible browser scrollbar and long inline transcript while the active session persists in the background. Recommended. |
 | **Patch compatibility mode** | On | Lets Codex use normal patches on Home Assistant OS, avoiding the nested Bubblewrap restriction that otherwise forces a shell-edit fallback. Command approval behavior is unchanged. |
 | **Skip command approvals** | Off | "YOLO mode". New Codex sessions run commands and edit files without asking you first, including Home Assistant reloads and restarts when control actions are enabled. Only turn it on if you review Codex's changes afterwards and keep backups. When off, Codex asks as usual. |
 | **Confirm reload actions** | On | Turn off to let Codex explain and perform supported reloads for user-requested changes without an extra conversational confirmation. Core restarts still require approval, and Codex's own command approval policy is unchanged. |
 | **Terminal file transfer** | Off | Enables `trz`/`tsz` file transfer so you can attach files to the terminal. Off by default because it can interfere with pasting long text. Turn it on only when you need to move files. |
 | **Codex memories** | Off | Starts new Codex sessions with the Codex memories feature enabled, so Codex can remember useful details between sessions. When off, any choice made with `/memories` in Codex still applies. |
-| **Allow Home Assistant control actions** | Off | Enables HA Codex's restricted configuration check and reload helper. |
+| **Allow Home Assistant control actions** | Off | Enables Codex Habitat's restricted configuration check and reload helper. |
 | **Allow Home Assistant Core restart** | Off | Allows the helper to restart Core after a successful configuration check. Requires control actions to be enabled. |
 
 For long reviews, leave **Preserve terminal history** on. A visible gold
@@ -122,7 +122,7 @@ Leave **Patch compatibility mode** enabled (the default). Home Assistant OS
 does not allow the nested unprivileged Bubblewrap namespace Codex normally uses
 for patches. Without this mode, Codex may report that its normal patch mechanism
 is unavailable before it touches a file and use a shell-edit fallback instead.
-Patch compatibility mode uses HA Codex's existing add-on container boundary so
+Patch compatibility mode uses Codex Habitat's existing add-on container boundary so
 normal patches work without host, Docker, or Supervisor-management access. It
 does not change Codex's command-approval behavior. Disable it only when
 diagnosing a sandbox-related issue.
@@ -130,7 +130,7 @@ diagnosing a sandbox-related issue.
 The sandbox mode is fixed when a Codex session **starts**. Because Session
 persistence keeps one Codex session running in the background, enabling Patch
 compatibility mode only takes effect once a fresh session starts. After changing
-the setting, **restart the HA Codex add-on** (not just navigate away and back).
+the setting, **restart the Codex Habitat add-on** (not just navigate away and back).
 
 If `apply_patch` reports:
 
@@ -146,7 +146,7 @@ two ways:
 
 - Inside Codex, run `/approvals` (or `/status` to confirm the mode) and choose
   **Full Access**. This switches the running session immediately.
-- Or restart the HA Codex add-on with Patch compatibility mode enabled, then
+- Or restart the Codex Habitat add-on with Patch compatibility mode enabled, then
   confirm the session reports `danger-full-access`.
 
 This most often happens when a session that started before Patch compatibility
@@ -157,8 +157,8 @@ changed with `/approvals` during the session.
 
 Choosing a mode with `/approvals` inside Codex only lasts for the running
 session, so it resets when the add-on restarts. To make "never ask" stick, turn
-on **Skip command approvals** and restart HA Codex. Codex then runs commands
-without asking, so a reload or restart requested through `ha-codex-ha` also
+on **Skip command approvals** and restart Codex Habitat. Codex then runs commands
+without asking, so a reload or restart requested through `codex-habitat-ha` also
 runs without an approval prompt. The helper still refuses a Core restart until
 the configuration check passes. Take a backup before letting Codex work
 unattended.
@@ -167,11 +167,11 @@ unattended.
 
 No separate API key, token, IP address, or host setup is needed. To allow
 Codex to validate configuration or reload supported areas, enable **Allow Home
-Assistant control actions** and restart HA Codex. To permit a Home Assistant
+Assistant control actions** and restart Codex Habitat. To permit a Home Assistant
 Core restart, also enable **Allow Home Assistant Core restart**. Both settings
 are off by default.
 
-Codex uses the built-in `ha-codex-ha` helper, which can validate configuration,
+Codex uses the built-in `codex-habitat-ha` helper, which can validate configuration,
 reload automations, scripts, scenes, groups, templates, Core configuration, or
 Lovelace resources, and restart Core only after validation. Codex must explain
 the action before acting. Turn off **Confirm reload actions** to skip an extra
@@ -214,7 +214,7 @@ back. This uses `trzsz`, which the terminal turns into a browser file picker —
 no extra add-on or share is needed.
 
 **First enable it:** turn on **Terminal file transfer** in the add-on's
-Configuration tab and restart HA Codex. It is off by default because it routes
+Configuration tab and restart Codex Habitat. It is off by default because it routes
 terminal input through a paste/drag handler that can interfere with pasting long
 text; leave it off unless you are moving files, and turn it back off afterward
 if you paste large prompts often.

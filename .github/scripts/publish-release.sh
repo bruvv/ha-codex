@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Publish the GitHub Release for one HA Codex version, or fill in its notes.
+# Publish the GitHub Release for one Codex Habitat version, or fill in its notes.
 #
 # VERSION defaults to the version in config.yaml. The tag goes on the commit
 # that first set config.yaml to that version, and the notes come from that
@@ -8,8 +8,8 @@
 # commit is an error, never moved.
 set -euo pipefail
 
-readonly CONFIG="home_assistant_codex_app/config.yaml"
-readonly CHANGELOG="home_assistant_codex_app/CHANGELOG.md"
+readonly CONFIG="codex_habitat/config.yaml"
+readonly CHANGELOG="codex_habitat/CHANGELOG.md"
 
 read_version() {
   sed -n 's/^version: "\(.*\)"$/\1/p'
@@ -23,9 +23,15 @@ if ! [[ "${version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
 fi
 tag="v${version}"
 
+# Include the pre-rename path so backfilled releases keep their original tags.
+readonly LEGACY_CONFIG="home_assistant_codex_app/config.yaml"
 commit=""
-for candidate in $(git rev-list --reverse HEAD -- "${CONFIG}"); do
-  if [ "$(git show "${candidate}:${CONFIG}" | read_version)" = "${version}" ]; then
+for candidate in $(git rev-list --reverse HEAD -- "${CONFIG}" "${LEGACY_CONFIG}"); do
+  candidate_config="${CONFIG}"
+  if ! git cat-file -e "${candidate}:${candidate_config}" 2>/dev/null; then
+    candidate_config="${LEGACY_CONFIG}"
+  fi
+  if [ "$(git show "${candidate}:${candidate_config}" | read_version)" = "${version}" ]; then
     commit="${candidate}"
     break
   fi
@@ -73,7 +79,7 @@ fi
 
 printf '%s\n' "${notes}" | gh release create "${tag}" \
   --target "${commit}" \
-  --title "HA Codex ${version}" \
+  --title "Codex Habitat ${version}" \
   --notes-file - \
   --latest="${latest}"
 echo "Published release ${tag} (latest: ${latest})."
