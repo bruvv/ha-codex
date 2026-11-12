@@ -102,6 +102,7 @@ Codex.
 | **Preserve terminal history** | On | Keeps the visible browser scrollbar and long inline transcript while the active session persists in the background. Recommended. |
 | **Patch compatibility mode** | On | Lets Codex use normal patches on Home Assistant OS, avoiding the nested Bubblewrap restriction that otherwise forces a shell-edit fallback. Command approval behavior is unchanged. |
 | **Skip command approvals** | Off | "YOLO mode". New Codex sessions run commands and edit files without asking you first, including Home Assistant reloads and restarts when control actions are enabled. Only turn it on if you review Codex's changes afterwards and keep backups. When off, Codex asks as usual. |
+| **Confirm reload actions** | On | Turn off to let Codex explain and perform supported reloads for user-requested changes without an extra conversational confirmation. Core restarts still require approval, and Codex's own command approval policy is unchanged. |
 | **Terminal file transfer** | Off | Enables `trz`/`tsz` file transfer so you can attach files to the terminal. Off by default because it can interfere with pasting long text. Turn it on only when you need to move files. |
 | **Codex memories** | Off | Starts new Codex sessions with the Codex memories feature enabled, so Codex can remember useful details between sessions. When off, any choice made with `/memories` in Codex still applies. |
 | **Allow Home Assistant control actions** | Off | Enables HA Codex's restricted configuration check and reload helper. |
@@ -173,8 +174,11 @@ are off by default.
 Codex uses the built-in `ha-codex-ha` helper, which can validate configuration,
 reload automations, scripts, scenes, groups, templates, Core configuration, or
 Lovelace resources, and restart Core only after validation. Codex must explain
-the action and request command approval first, unless **Skip command approvals**
-is on. The helper cannot control the
+the action before acting. Turn off **Confirm reload actions** to skip an extra
+confirmation for supported reloads needed for user-requested changes. Core
+restarts still require approval, and Codex's underlying command approval
+policy is unchanged. **Skip command approvals** is the separate global
+override. The helper cannot control the
 host, Docker, Supervisor, updates, shutdown, or arbitrary Home Assistant
 services. Refresh the browser after dashboard changes; reloading Lovelace
 resources does not reload dashboard YAML or storage configuration by itself.

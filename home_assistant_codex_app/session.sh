@@ -3,7 +3,16 @@ set -u
 
 readonly MODEL="$1"
 readonly TERMINAL_MODE="$2"
-readonly HA_CODEX_INSTRUCTIONS='Home Assistant control is available only through the ha-codex-ha helper. For a requested configuration check, reload, or restart, explain the intended action and use ha-codex-ha rather than direct curl, ha, hass, systemctl, Docker, or SUPERVISOR_TOKEN access. Ask for command approval before any reload or restart. Run ha-codex-ha check before a Core restart; the helper enforces this too. Use ha-codex-ha --help to see the allowlisted actions. Dashboard configuration may require a browser refresh; dashboard-resources only reloads Lovelace resources.'
+readonly HA_CODEX_INSTRUCTION_PREFIX='Home Assistant control is available only through the ha-codex-ha helper. For a requested configuration check, reload, or restart, explain the intended action and use ha-codex-ha rather than direct curl, ha, hass, systemctl, Docker, or SUPERVISOR_TOKEN access. '
+# The add-on defaults to its existing confirmation behavior. Disabling the
+# extra reload confirmation never removes the Core restart safeguard.
+if [ "${HA_CODEX_CONFIRM_RELOAD_ACTIONS:-true}" = "false" ]; then
+  readonly HA_CODEX_APPROVAL_INSTRUCTIONS='For supported reloads needed to apply user-requested changes, briefly explain the action and proceed without asking for a separate confirmation. This does not override the Codex command approval policy. Always ask for approval before a Home Assistant Core restart.'
+else
+  readonly HA_CODEX_APPROVAL_INSTRUCTIONS='Ask for command approval before any reload or restart.'
+fi
+readonly HA_CODEX_INSTRUCTION_SUFFIX=' Run ha-codex-ha check before a Core restart; the helper enforces this too. Use ha-codex-ha --help to see the allowlisted actions. Dashboard configuration may require a browser refresh; dashboard-resources only reloads Lovelace resources.'
+readonly HA_CODEX_INSTRUCTIONS="${HA_CODEX_INSTRUCTION_PREFIX}${HA_CODEX_APPROVAL_INSTRUCTIONS}${HA_CODEX_INSTRUCTION_SUFFIX}"
 readonly HA_CODEX_CONFIG_OVERRIDE="developer_instructions=\"${HA_CODEX_INSTRUCTIONS}\""
 
 cd /homeassistant
