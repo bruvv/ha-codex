@@ -32,10 +32,27 @@ away and back does not.
 | **Patch compatibility mode** | On | Uses the add-on container boundary instead of nested Bubblewrap so normal patches work on Home Assistant OS. Does not change command approvals. |
 | **Skip command approvals** | Off | Starts new sessions with command approvals disabled. Only enable with backups and careful review. When off, a saved Codex approval policy still applies. |
 | **Confirm reload actions** | On | Instructs Codex to request approval before reloads. Off removes the extra conversational confirmation for requested changes, not Codex's command approval policy. |
+| **Context7 documentation** | On | Hosted library/framework documentation lookups, without a required API key. |
+| **Context7 API key (optional)** | Empty | Paste a key for higher limits; leave empty for anonymous access. |
 | **Codex memories** | Off | Enables memories at startup. Off leaves any saved `/memories` choice unchanged. |
 | **Terminal file transfer** | Off | Enables uploads/downloads with `trz`/`tsz`. Can interfere with long pastes; leave off unless needed. |
 | **Allow Home Assistant control actions** | Off | Enables configuration checks and supported reloads through the helper. |
 | **Allow Home Assistant Core restart** | Off | Allows the helper to restart Core after a successful configuration check. Requires control actions. |
+
+Context7 uses `https://mcp.context7.com/mcp`; no plugin, npm installation, or
+separate browser sign-in is needed. Anonymous access has lower rate limits.
+Get an optional key at [context7.com](https://context7.com), paste it into the
+masked Configuration field, save, and restart the add-on. The key is passed
+through an environment variable, not saved to Codex TOML or command arguments.
+Masking is not encryption: protect add-on settings and backups as credentials.
+
+Documentation queries are sent to an external service. Codex is instructed not
+to send secrets or private Home Assistant configuration, and to acknowledge
+outages/rate limits rather than claim a lookup succeeded. These instructions
+are not a data-loss prevention boundary. Turn **Context7 documentation** off to
+disable the bundled connection. User-managed MCP servers are unchanged; the
+name `habitat_context7` is reserved for this add-on's session configuration.
+This integrates the hosted MCP tools, not the Context7 plugin's bundled skill.
 
 Use `/model` in Codex to see models available to your account. To keep your
 in-session model and effort across add-on restarts, set both **Model** and
@@ -47,6 +64,11 @@ maximum and logged. With Model set to `default`, this check uses the model
 saved in Codex; with no saved model, Codex chooses its own default.
 
 ## Safe editing and Home Assistant actions
+
+Every new Codex session is instructed to inspect existing automations before
+changing them, prefer native Home Assistant functionality, and avoid unnecessary
+custom integrations. These rules are supplied at startup; the add-on does not
+create or overwrite an `AGENTS.md` in your configuration.
 
 Take a backup and a Git checkpoint before significant edits. Start with:
 

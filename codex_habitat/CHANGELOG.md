@@ -1,6 +1,10 @@
 # Changelog
 
-## Unreleased
+## 1.1.0
+
+- Enabled hosted Context7 documentation by default with anonymous access, an optional masked API-key setting, and an opt-out switch.
+
+- Added default Codex guidance to inspect existing automations first, prefer native Home Assistant functionality, and avoid unnecessary custom integrations.
 
 ## 1.0.0
 

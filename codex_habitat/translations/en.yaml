@@ -53,6 +53,16 @@ configuration:
     description: >-
       Enable uploads with trz and downloads with tsz. Leave off unless needed;
       file transfer can interfere with long pastes.
+  context7:
+    name: Context7 documentation
+    description: >-
+      Enable hosted documentation lookups. Works without a key at lower rate
+      limits. Queries go to Context7. Restart after changing settings.
+  context7_api_key:
+    name: Context7 API key (optional)
+    description: >-
+      Leave empty for anonymous access, or paste a Context7 key for higher
+      limits. Masked in this form; restart after changing it.
   memories:
     name: Codex memories
     description: >-

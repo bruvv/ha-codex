@@ -17,6 +17,7 @@ SKIP_COMMAND_APPROVALS="$(bashio::config 'skip_command_approvals')"
 CONFIRM_RELOAD_ACTIONS="$(bashio::config 'confirm_reload_actions')"
 FILE_TRANSFER="$(bashio::config 'file_transfer')"
 MEMORIES="$(bashio::config 'memories')"
+CONTEXT7="$(bashio::config 'context7' 'true')"
 MODEL="$(bashio::config 'model')"
 REASONING_EFFORT="$(bashio::config 'reasoning_effort')"
 HOME_ASSISTANT_CONTROL="$(bashio::config 'home_assistant_control')"
@@ -81,6 +82,11 @@ export CODEX_HABITAT_CONFIRM_RELOAD_ACTIONS="${CONFIRM_RELOAD_ACTIONS}"
 export CODEX_HABITAT_FILE_TRANSFER="${FILE_TRANSFER}"
 export CODEX_HABITAT_MEMORIES="${MEMORIES}"
 export CODEX_HABITAT_REASONING_EFFORT="${REASONING_EFFORT}"
+export CODEX_HABITAT_CONTEXT7="${CONTEXT7}"
+export CONTEXT7_API_KEY=""
+if [ "${CONTEXT7}" = "true" ] && bashio::config.has_value 'context7_api_key'; then
+  CONTEXT7_API_KEY="$(bashio::config 'context7_api_key')"
+fi
 
 # Codex renamed the memories feature flag from [features].memory_tool to
 # [features].memories and warns on every start while the old key remains.

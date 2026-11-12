@@ -3,7 +3,7 @@ set -u
 
 readonly MODEL="$1"
 readonly TERMINAL_MODE="$2"
-readonly CODEX_HABITAT_INSTRUCTION_PREFIX='Home Assistant control is available only through the codex-habitat-ha helper. For a requested configuration check, reload, or restart, explain the intended action and use codex-habitat-ha rather than direct curl, ha, hass, systemctl, Docker, or SUPERVISOR_TOKEN access. '
+readonly CODEX_HABITAT_INSTRUCTION_PREFIX='Always inspect existing automations before changing them. Prefer native Home Assistant functionality. Avoid unnecessary custom integrations. Home Assistant control is available only through the codex-habitat-ha helper. For a requested configuration check, reload, or restart, explain the intended action and use codex-habitat-ha rather than direct curl, ha, hass, systemctl, Docker, or SUPERVISOR_TOKEN access. '
 # The add-on defaults to its existing confirmation behavior. Disabling the
 # extra reload confirmation never removes the Core restart safeguard.
 if [ "${CODEX_HABITAT_CONFIRM_RELOAD_ACTIONS:-true}" = "false" ]; then
@@ -12,7 +12,11 @@ else
   readonly CODEX_HABITAT_APPROVAL_INSTRUCTIONS='Ask for command approval before any reload or restart.'
 fi
 readonly CODEX_HABITAT_INSTRUCTION_SUFFIX=' Run codex-habitat-ha check before a Core restart; the helper enforces this too. Use codex-habitat-ha --help to see the allowlisted actions. Dashboard configuration may require a browser refresh; dashboard-resources only reloads Lovelace resources.'
-readonly CODEX_HABITAT_INSTRUCTIONS="${CODEX_HABITAT_INSTRUCTION_PREFIX}${CODEX_HABITAT_APPROVAL_INSTRUCTIONS}${CODEX_HABITAT_INSTRUCTION_SUFFIX}"
+CODEX_HABITAT_INSTRUCTIONS="${CODEX_HABITAT_INSTRUCTION_PREFIX}${CODEX_HABITAT_APPROVAL_INSTRUCTIONS}${CODEX_HABITAT_INSTRUCTION_SUFFIX}"
+if [ "${CODEX_HABITAT_CONTEXT7:-true}" = "true" ]; then
+  CODEX_HABITAT_INSTRUCTIONS+=' Use Context7 for current library and framework documentation. Do not include secrets or private Home Assistant configuration in documentation queries. If Context7 is unavailable or rate-limited, explain that and continue without claiming documentation was checked.'
+fi
+readonly CODEX_HABITAT_INSTRUCTIONS
 readonly CODEX_HABITAT_CONFIG_OVERRIDE="developer_instructions=\"${CODEX_HABITAT_INSTRUCTIONS}\""
 
 cd /homeassistant
@@ -74,6 +78,14 @@ if [ "${CODEX_HABITAT_FILE_TRANSFER:-false}" = "true" ]; then
 fi
 
 CODEX_ARGS=(--config "${CODEX_HABITAT_CONFIG_OVERRIDE}")
+
+# Reserve an add-on-specific server name; leave user-managed MCP servers alone.
+# Pass only the environment variable name, never the key, in arguments.
+CONTEXT7_AUTH=""
+if [ "${CODEX_HABITAT_CONTEXT7:-true}" = "true" ] && [ -n "${CONTEXT7_API_KEY:-}" ]; then
+  CONTEXT7_AUTH=', bearer_token_env_var="CONTEXT7_API_KEY"'
+fi
+CODEX_ARGS+=(--config "mcp_servers.habitat_context7={url=\"https://mcp.context7.com/mcp\", enabled=${CODEX_HABITAT_CONTEXT7:-true}, required=false${CONTEXT7_AUTH}}")
 
 # Home Assistant OS does not allow the nested unprivileged user namespace that
 # Codex's Bubblewrap sandbox needs. Without it, apply_patch fails while reading
