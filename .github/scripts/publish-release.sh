@@ -17,21 +17,16 @@ read_version() {
 
 current="$(read_version < "${CONFIG}")"
 version="${VERSION:-${current}}"
-if ! [[ "${version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-  echo "::error::Version must look like 1.2.3, got '${version}'."
+if ! [[ "${version}" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+  echo "::error::Version must be MAJOR.MINOR.PATCH without leading zeros, got '${version}'."
   exit 1
 fi
 tag="v${version}"
 
-# Include the pre-rename path so backfilled releases keep their original tags.
-readonly LEGACY_CONFIG="home_assistant_codex_app/config.yaml"
+# Only Codex Habitat's path defines this project's release history.
 commit=""
-for candidate in $(git rev-list --reverse HEAD -- "${CONFIG}" "${LEGACY_CONFIG}"); do
-  candidate_config="${CONFIG}"
-  if ! git cat-file -e "${candidate}:${candidate_config}" 2>/dev/null; then
-    candidate_config="${LEGACY_CONFIG}"
-  fi
-  if [ "$(git show "${candidate}:${candidate_config}" | read_version)" = "${version}" ]; then
+for candidate in $(git rev-list --reverse HEAD -- "${CONFIG}"); do
+  if [ "$(git show "${candidate}:${CONFIG}" | read_version)" = "${version}" ]; then
     commit="${candidate}"
     break
   fi

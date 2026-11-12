@@ -69,7 +69,7 @@ jobs:
             --tag codex-habitat:pr-${{ github.event.pull_request.number || github.run_id }}-${{ matrix.arch }} \
             codex_habitat
 
-      - name: Test terminal settings and update notes
+      - name: Test terminal settings and release scripts
         run: |
           run_id="${{ github.event.pull_request.number || github.run_id }}"
           image="codex-habitat:pr-${run_id}-${{ matrix.arch }}"
@@ -78,6 +78,7 @@ jobs:
             --entrypoint bash "$image" -ec '
               bash .github/scripts/test-terminal-settings.sh
               bash .github/scripts/test-update-codex.sh
+              bash .github/scripts/test-publish-release.sh
             '
 
       - name: Verify runtime dependencies
@@ -110,7 +111,8 @@ jobs:
 
       - name: Verify configured models and healthy add-on startup
         run: |
-          image="codex-habitat:pr-${{ github.event.pull_request.number || github.run_id }}-${{ matrix.arch }}"
+          run_id="${{ github.event.pull_request.number || github.run_id }}"
+          image="codex-habitat:pr-${run_id}-${{ matrix.arch }}"
           options_file="$RUNNER_TEMP/codex-habitat-options.json"
           printf '{}\n' > "$options_file"
 

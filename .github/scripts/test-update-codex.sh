@@ -87,3 +87,14 @@ for pending in populated empty absent; do
     printf 'PASS: %s Unreleased notes, unchanged retry, and no carry-over on the next update.\n' "${pending}"
   )
 done
+
+(
+  cd "${test_dir}/absent"
+  printf 'version: "1.00.0"\n' > codex_habitat/config.yaml
+  if MOCK_CODEX_VERSION=999.0.0 bash "${repo}/.github/scripts/update-codex.sh" > "${test_dir}/error" 2>&1; then
+    echo 'An invalid add-on version must be rejected before updating.' >&2
+    exit 1
+  fi
+  grep -Fq 'Could not read CODEX_VERSION' "${test_dir}/error"
+)
+printf '%s\n' 'PASS: updater rejects an add-on version with leading zeros.'

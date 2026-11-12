@@ -154,6 +154,10 @@ leaves `main` unchanged. New model selector entries still require a manual chang
 
 For maintainers:
 
+- `config.yaml` is the source of truth for the add-on version. Stable releases
+  use [Semantic Versioning](https://semver.org/): `MAJOR.MINOR.PATCH` for breaking
+  changes, backward-compatible features, and fixes, respectively. The matching
+  changelog heading is `## X.Y.Z` and the Git tag is `vX.Y.Z`.
 - Put pending changes under `## Unreleased` in `CHANGELOG.md`. The updater moves
   them into the next version once and adds one short upstream release link.
 - A manual release needs a matching version in `config.yaml` and numbered

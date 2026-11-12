@@ -19,7 +19,8 @@ readonly OUTPUT="${GITHUB_OUTPUT:-/dev/null}"
 
 current="$(sed -n 's/^ARG CODEX_VERSION="\(.*\)"$/\1/p' "${DOCKERFILE}")"
 addon_current="$(sed -n 's/^version: "\(.*\)"$/\1/p' "${CONFIG}")"
-if ! [[ "${current}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || ! [[ "${addon_current}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+if ! [[ "${current}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] ||
+   ! [[ "${addon_current}" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
   echo "::error::Could not read CODEX_VERSION from ${DOCKERFILE} or version from ${CONFIG}."
   exit 1
 fi

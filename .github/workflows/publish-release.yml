@@ -4,7 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: Add-on version to release, such as 1.2.16. Leave empty for the version in config.yaml.
+        description: >-
+          SemVer version to release, such as 1.0.0.
+          Leave empty for the version in config.yaml.
         required: false
         type: string
 
