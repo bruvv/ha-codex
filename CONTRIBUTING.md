@@ -4,6 +4,16 @@ Thank you for helping improve Codex Habitat. Please review and understand every
 change before submitting it, test it in a Home Assistant OS environment when
 possible, and describe its user-facing effect clearly.
 
+## Privacy review before pushing
+
+Keep shared code, examples, tests, documentation, and release notes generic.
+Never publish real household entity IDs, device names, area assignments,
+automation IDs, custom template names or contents, private paths, or credentials.
+Accept installation-specific identifiers as caller input or discover them through
+Home Assistant registries; do not embed a user's household policies in the app.
+Use synthetic fixtures in tests. Review the complete staged diff, including new
+files and build inputs, before every push—not only before releases.
+
 ## Open Home Foundation contributions
 
 If Codex Habitat is proposed to an Open Home Foundation project, the person opening

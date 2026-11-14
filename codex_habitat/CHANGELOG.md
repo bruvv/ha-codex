@@ -4,8 +4,9 @@
 
 - Added allowlisted entity-state reads, media-device and area inspection, and verified device-area assignment.
 - Added local Bluetooth scan-mode inspection and verified changes through native Home Assistant options flows.
-- Added custom-template reloads and optional household-specific presence and bedroom policy diagnostics. Policy commands require the documented Home Assistant templates and automations; they are not general-purpose policies.
-- Bundled all helper scripts in the image and added isolated transport tests. Both policy test commands now fail when any scenario fails.
+- Added custom-template reloads.
+- Bundled generic helper scripts in the image and added isolated transport tests.
+- Removed installation-specific policy diagnostics and entity identifiers from the current source; helper inputs are caller-supplied or discovered from Home Assistant registries.
 
 ## 1.1.0
 

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';
-import {mkdtempSync, writeFileSync, rmSync, readFileSync} from 'node:fs';
+import {mkdtempSync, writeFileSync, rmSync, readFileSync, readdirSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join, resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
@@ -22,31 +22,14 @@ function shell(args, overrides = {}) {
 // The fixture refuses every unexpected transport call; no network or device action occurs.
 writeFileSync(join(dir, 'curl'), `#!/usr/bin/env bash
 case "$*" in
-  */states/light.fixture) printf '%s' '{"entity_id":"light.fixture","state":"on","attributes":{"brightness":42,"secret":"hidden"}}' ;;
+  */states/*.fixture)
+    entity="\${!#}"
+    printf '{"entity_id":"%s","state":"on","attributes":{"brightness":42,"secret":"hidden"}}' "\${entity##*/}" ;;
+
   */services/homeassistant/reload_custom_templates) printf '[]' ;;
-  */template) printf '%s' "$FIXTURE_RESULT" ;;
   *) exit 99 ;;
 esac
 `, {mode:0o755});
-writeFileSync(join(dir, 'node'), `#!/usr/bin/env bash
-case "$1" in
-  */presence-policy-payload.mjs|*/bedroom-policy-payload.mjs) printf '%s' '{"template":"fixture"}' ;;
-  *) exit 99 ;;
-esac
-`, {mode:0o755});
-// Override file reads only in child processes for household-specific template prerequisites.
-const prelude = `
-import fs from 'node:fs';
-import {syncBuiltinESMExports} from 'node:module';
-const read = fs.readFileSync;
-fs.readFileSync = function(path, ...args) {
-  if (String(path).endsWith('/huisbeleid.jinja')) return '{% macro slaper_alleen_thuis() -%}false{%- endmacro %}';
-  if (String(path).endsWith('/automations.yaml')) return "- id: nr_yaml_auto_laadmelding\\n  value_template: '{{ states(''zone.home'') | float(-1) >= 1 }}'\\n";
-  if (String(path).endsWith('/slaapkamerbeleid.jinja')) return '{% macro tv_blokkeert_muziek() %}false{% endmacro %}{% macro tv_vrij_voor_slaapmuziek() %}true{% endmacro %}';
-  return read.call(this, path, ...args);
-};
-syncBuiltinESMExports();
-`;
 const mock = `
 let saved = 'auto';
 const entryId = '01234567890123456789012345';
@@ -86,7 +69,7 @@ globalThis.WebSocket = class {
 };
 `;
 function script(name, args, overrides = {}) {
-  return spawnSync(process.execPath, ['--input-type=module', '--eval', `${prelude}\n${mock}\nprocess.argv = ['node', 'fixture', ...${JSON.stringify(args)}]; await import(${JSON.stringify(pathToFileURL(join(root, name)).href)});`], {
+  return spawnSync(process.execPath, ['--input-type=module', '--eval', `${mock}\nprocess.argv = ['node', 'fixture', ...${JSON.stringify(args)}]; await import(${JSON.stringify(pathToFileURL(join(root, name)).href)});`], {
     encoding:'utf8', env:{...env,...overrides}, timeout:5000,
   });
 }
@@ -102,18 +85,8 @@ try {
   check(shell(['state','light.fixture'], {SUPERVISOR_TOKEN:''}), 78);
   check(shell(['reload','custom-templates']), 0, /reload_custom_templates/);
   check(shell(['restart'], {CODEX_HABITAT_ALLOW_HOME_ASSISTANT_RESTART:'false'}), 77);
-  for (const [name, command] of [['presence-policy-payload.mjs','presence-policy'],['bedroom-policy-payload.mjs','bedroom-policy']]) {
-    for (const mode of ['live','test']) {
-      const result = script(name, [mode]);
-      check(result);
-      assert.equal(typeof JSON.parse(result.stdout).template, 'string');
-    }
-    check(script(name, ['invalid']), 1, /Unsupported/);
-    check(shell([command,'extra']), 64);
-    check(shell([`${command}-test`], {FIXTURE_RESULT:'[{"passed":true}]'}));
-    check(shell([`${command}-test`], {FIXTURE_RESULT:'[{"passed":false}]'}), 1);
-    check(shell([`${command}-test`], {FIXTURE_RESULT:'[]'}), 1);
-    check(shell([`${command}-test`], {FIXTURE_RESULT:'invalid JSON'}), 5);
+  for (const domain of ['light','media_player','remote','switch','automation']) {
+    check(shell(['state',`${domain}.fixture`]));
   }
   check(script('codex-habitat-registry.mjs', ['areas']), 0, /Lounge/);
   check(script('codex-habitat-registry.mjs', ['media-devices']), 0, /media_player.fixture/);
@@ -130,8 +103,12 @@ try {
   check(script('codex-habitat-bluetooth.mjs', ['bluetooth-mode',id,'invalid']), 1, /Specify auto/);
   check(script('codex-habitat-bluetooth.mjs', ['bluetooth-info','../invalid']), 1, /config entry ID/);
   check(script('codex-habitat-bluetooth.mjs', ['bluetooth-info',id], {FIXTURE_REJECT:'true'}), 1, /fixture_rejection/);
-  for (const file of ['codex-habitat-bluetooth.mjs','codex-habitat-registry.mjs','presence-policy-payload.mjs','bedroom-policy-payload.mjs']) {
+  for (const file of ['codex-habitat-bluetooth.mjs','codex-habitat-registry.mjs']) {
     assert.ok(readFileSync(join(root,'Dockerfile'),'utf8').includes(file));
+  }
+  // Runtime helpers must accept entity IDs as input, never embed household IDs.
+  for (const file of ['codex-habitat-ha', ...readdirSync(root).filter(name => name.endsWith('.mjs'))]) {
+    assert.doesNotMatch(readFileSync(join(root,file),'utf8'), /\b(?:light|media_player|remote|switch|automation|input_boolean|sensor|binary_sensor|person|device_tracker|zone)\.[a-z0-9_]+/, file);
   }
   console.log(`${checks} helper checks passed (mock transports; no live Home Assistant actions).`);
 } finally { rmSync(dir, {recursive:true,force:true}); }

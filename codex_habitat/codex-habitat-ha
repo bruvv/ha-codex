@@ -12,11 +12,7 @@ usage() {
 Usage: codex-habitat-ha <command>
 
 Commands:
-  state <entity_id> [...]        Read up to 20 selected light, media player or remote states.
-  presence-policy               Read the loaded home-count/sleeper decision.
-  presence-policy-test          Test fixed presence scenarios without device actions.
-  bedroom-policy                Read the loaded bedroom TV/music decision.
-  bedroom-policy-test           Run fixed TV/music scenarios without device actions.
+  state <entity_id> [...]        Read up to 20 light, media player, remote, switch or automation states.
   media-devices                  List media entities with device names and areas.
   areas                          List existing area IDs and names.
   device-info <entity_id>        Read a media device and its entity area assignments.
@@ -99,7 +95,7 @@ case "${1:-}" in
       exit 64
     fi
     for entity in "$@"; do
-      if [[ ! "$entity" =~ ^(light\.[a-z0-9_]+|media_player\.[a-z0-9_]+|remote\.[a-z0-9_]+|switch\.adaptive_lighting_[a-z0-9_]+|automation\.licht_overgangen_3_seconden)$ ]]; then
+      if [[ ! "$entity" =~ ^(light|media_player|remote|switch|automation)\.[a-z0-9_]+$ ]]; then
         printf '%s\n' 'Entity is outside the state read allowlist.' >&2
         exit 64
       fi
@@ -118,26 +114,6 @@ case "${1:-}" in
     esac
     if [ "$#" -ne "$expected" ]; then usage >&2; exit 64; fi
     node "${HELPER_DIR}/codex-habitat-registry.mjs" "$@"
-    ;;
-  presence-policy|presence-policy-test)
-    require_control
-    if [ "$#" -ne 1 ]; then usage >&2; exit 64; fi
-    policy_mode=live
-    if [ "$1" = presence-policy-test ]; then policy_mode="test"; fi
-    payload="$(node "${HELPER_DIR}/presence-policy-payload.mjs" "$policy_mode")"
-    response="$(api POST /template "$payload")"
-    printf '%s\n' "$response"
-    if [ "$policy_mode" = test ]; then printf '%s\n' "$response" | jq -e 'length > 0 and all(.[]; .passed == true)' >/dev/null; fi
-    ;;
-  bedroom-policy|bedroom-policy-test)
-    require_control
-    if [ "$#" -ne 1 ]; then usage >&2; exit 64; fi
-    policy_mode=live
-    if [ "$1" = bedroom-policy-test ]; then policy_mode="test"; fi
-    payload="$(node "${HELPER_DIR}/bedroom-policy-payload.mjs" "$policy_mode")"
-    response="$(api POST /template "$payload")"
-    printf '%s\n' "$response"
-    if [ "$policy_mode" = test ]; then printf '%s\n' "$response" | jq -e 'length > 0 and all(.[]; .passed == true)' >/dev/null; fi
     ;;
   status)
     require_control

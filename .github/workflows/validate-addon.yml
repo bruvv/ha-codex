@@ -97,8 +97,7 @@ jobs:
             command -v node
             node --version
             codex-habitat-ha --help
-            for helper in codex-habitat-bluetooth codex-habitat-registry \
-                presence-policy-payload bedroom-policy-payload; do
+            for helper in codex-habitat-bluetooth codex-habitat-registry; do
               node --check "/usr/local/bin/${helper}.mjs"
             done
             if command -v npm >/dev/null 2>&1; then
