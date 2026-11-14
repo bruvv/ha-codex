@@ -76,6 +76,7 @@ jobs:
           docker run --rm --network none \
             --volume "$PWD:/repo:ro" --workdir /repo \
             --entrypoint bash "$image" -ec '
+              node .github/scripts/test-ha-helper.mjs
               bash .github/scripts/test-terminal-settings.sh
               bash .github/scripts/test-update-codex.sh
               bash .github/scripts/test-publish-release.sh
@@ -95,6 +96,11 @@ jobs:
             codex-code-mode-host --help
             command -v node
             node --version
+            codex-habitat-ha --help
+            for helper in codex-habitat-bluetooth codex-habitat-registry \
+                presence-policy-payload bedroom-policy-payload; do
+              node --check "/usr/local/bin/${helper}.mjs"
+            done
             if command -v npm >/dev/null 2>&1; then
               echo "npm must not be installed" >&2
               exit 1

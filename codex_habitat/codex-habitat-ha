@@ -4,15 +4,30 @@
 set -euo pipefail
 
 readonly API_BASE="http://supervisor/core/api"
+HELPER_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+readonly HELPER_DIR
 
 usage() {
   cat <<'EOF'
 Usage: codex-habitat-ha <command>
 
 Commands:
+  state <entity_id> [...]        Read up to 20 selected light, media player or remote states.
+  presence-policy               Read the loaded home-count/sleeper decision.
+  presence-policy-test          Test fixed presence scenarios without device actions.
+  bedroom-policy                Read the loaded bedroom TV/music decision.
+  bedroom-policy-test           Run fixed TV/music scenarios without device actions.
+  media-devices                  List media entities with device names and areas.
+  areas                          List existing area IDs and names.
+  device-info <entity_id>        Read a media device and its entity area assignments.
+  device-area <entity_id> <area_id>
+                                 Assign its device to an existing area and verify.
   status                         Check that the Home Assistant Core API is reachable.
+  bluetooth-info <entry_id>      Read a local Bluetooth adapter's saved and runtime scan mode.
+  bluetooth-mode <entry_id> <auto|active|passive>
+                                 Set and verify its scan mode using native HA options.
   check                          Validate configuration.yaml and included configuration.
-  reload <automation|script|scene|group|template|core|dashboard-resources>
+  reload <automation|script|scene|group|template|custom-templates|core|dashboard-resources>
                                  Reload one supported Home Assistant configuration area.
   restart                        Validate configuration, then restart Home Assistant Core.
 
@@ -72,6 +87,58 @@ call_service() {
 }
 
 case "${1:-}" in
+  bluetooth-info|bluetooth-mode)
+    require_control
+    node "${HELPER_DIR}/codex-habitat-bluetooth.mjs" "$@"
+    ;;
+  state)
+    require_control
+    shift
+    if [ "$#" -lt 1 ] || [ "$#" -gt 20 ]; then
+      printf '%s\n' 'Specify between 1 and 20 supported entities.' >&2
+      exit 64
+    fi
+    for entity in "$@"; do
+      if [[ ! "$entity" =~ ^(light\.[a-z0-9_]+|media_player\.[a-z0-9_]+|remote\.[a-z0-9_]+|switch\.adaptive_lighting_[a-z0-9_]+|automation\.licht_overgangen_3_seconden)$ ]]; then
+        printf '%s\n' 'Entity is outside the state read allowlist.' >&2
+        exit 64
+      fi
+    done
+    for entity in "$@"; do
+      response="$(api GET "/states/$entity")"
+      printf '%s\n' "$response" | jq '{entity_id,state,attributes:(.attributes | {friendly_name,app_name,source,is_volume_muted,volume_level,supported_features,supported_color_modes,entity_id,brightness,configuration,transition,initial_transition,sleep_transition,last_triggered,current})}'
+    done
+    ;;
+  areas|media-devices|device-info|device-area)
+    require_control
+    case "$1" in
+      areas|media-devices) expected=1 ;;
+      device-info) expected=2 ;;
+      device-area) expected=3 ;;
+    esac
+    if [ "$#" -ne "$expected" ]; then usage >&2; exit 64; fi
+    node "${HELPER_DIR}/codex-habitat-registry.mjs" "$@"
+    ;;
+  presence-policy|presence-policy-test)
+    require_control
+    if [ "$#" -ne 1 ]; then usage >&2; exit 64; fi
+    policy_mode=live
+    if [ "$1" = presence-policy-test ]; then policy_mode="test"; fi
+    payload="$(node "${HELPER_DIR}/presence-policy-payload.mjs" "$policy_mode")"
+    response="$(api POST /template "$payload")"
+    printf '%s\n' "$response"
+    if [ "$policy_mode" = test ]; then printf '%s\n' "$response" | jq -e 'length > 0 and all(.[]; .passed == true)' >/dev/null; fi
+    ;;
+  bedroom-policy|bedroom-policy-test)
+    require_control
+    if [ "$#" -ne 1 ]; then usage >&2; exit 64; fi
+    policy_mode=live
+    if [ "$1" = bedroom-policy-test ]; then policy_mode="test"; fi
+    payload="$(node "${HELPER_DIR}/bedroom-policy-payload.mjs" "$policy_mode")"
+    response="$(api POST /template "$payload")"
+    printf '%s\n' "$response"
+    if [ "$policy_mode" = test ]; then printf '%s\n' "$response" | jq -e 'length > 0 and all(.[]; .passed == true)' >/dev/null; fi
+    ;;
   status)
     require_control
     api GET / >/dev/null
@@ -89,6 +156,7 @@ case "${1:-}" in
       scene) call_service scene reload ;;
       group) call_service group reload ;;
       template) call_service template reload ;;
+      custom-templates) call_service homeassistant reload_custom_templates ;;
       core)
         check_config
         call_service homeassistant reload_core_config

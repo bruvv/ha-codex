@@ -84,8 +84,27 @@ separately if needed. No user-managed token, IP address, or host setup is requir
 The `codex-habitat-ha` helper supports:
 
 - `status` and `check` for connectivity and configuration validation.
-- `reload automation|script|scene|group|template|core|dashboard-resources`.
+- `reload automation|script|scene|group|template|custom-templates|core|dashboard-resources`.
 - `restart`, which refuses to proceed unless the configuration check passes.
+- `state <entity_id> [...]` reads 1–20 light, media-player, remote, Adaptive Lighting switch, or the legacy `automation.licht_overgangen_3_seconden` states, returning selected attributes only.
+- `areas`, `media-devices`, and `device-info <entity_id>` inspect media-player/remote devices and their area assignments.
+- `device-area <entity_id> <area_id>` assigns the entire device to an existing area and verifies the result; conflicting entity-area overrides prevent the change.
+- `bluetooth-info <entry_id>` and `bluetooth-mode <entry_id> <auto|active|passive>` inspect or change a loaded local `hci` adapter through native options flows. The adapter must support passive scanning and expose the mode options form. Changes verify both the saved mode and runtime requested mode; actual scanning may differ from the requested mode.
+
+The optional `presence-policy`, `presence-policy-test`, `bedroom-policy`, and
+`bedroom-policy-test` commands are household-specific diagnostics, not bundled
+automation policies. Presence diagnostics require
+`/homeassistant/custom_templates/huisbeleid.jinja` with `slaper_alleen_thuis`;
+tests also require the `nr_yaml_auto_laadmelding` automation in
+`/homeassistant/automations.yaml`. Bedroom diagnostics require
+`/homeassistant/custom_templates/slaapkamerbeleid.jinja` with
+`tv_blokkeert_muziek` and `tv_vrij_voor_slaapmuziek`, and the matching entity
+IDs used by the scripts. Missing or incompatible configuration causes failure;
+these commands do not install or modify it. Live commands evaluate loaded
+templates; tests evaluate disk templates against fixed fixtures via the template
+API, without device actions. Both test commands exit unsuccessfully if any
+scenario fails. Reload custom templates after editing them before comparing
+live and test results.
 
 Codex is instructed to explain actions and request approval for reloads and
 restarts. **Confirm reload actions** can remove the extra conversational reload

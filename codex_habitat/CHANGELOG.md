@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.0
+
+- Added allowlisted entity-state reads, media-device and area inspection, and verified device-area assignment.
+- Added local Bluetooth scan-mode inspection and verified changes through native Home Assistant options flows.
+- Added custom-template reloads and optional household-specific presence and bedroom policy diagnostics. Policy commands require the documented Home Assistant templates and automations; they are not general-purpose policies.
+- Bundled all helper scripts in the image and added isolated transport tests. Both policy test commands now fail when any scenario fails.
+
 ## 1.1.0
 
 - Enabled hosted Context7 documentation by default with anonymous access, an optional masked API-key setting, and an opt-out switch.
