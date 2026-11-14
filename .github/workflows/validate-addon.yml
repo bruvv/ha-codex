@@ -77,6 +77,7 @@ jobs:
             --volume "$PWD:/repo:ro" --workdir /repo \
             --entrypoint bash "$image" -ec '
               node .github/scripts/test-ha-helper.mjs
+              node --test .github/scripts/test-dashboard.mjs
               bash .github/scripts/test-terminal-settings.sh
               bash .github/scripts/test-update-codex.sh
               bash .github/scripts/test-publish-release.sh
@@ -97,7 +98,8 @@ jobs:
             command -v node
             node --version
             codex-habitat-ha --help
-            for helper in codex-habitat-bluetooth codex-habitat-registry; do
+            for helper in codex-habitat-bluetooth codex-habitat-registry \
+                codex-habitat-dashboard; do
               node --check "/usr/local/bin/${helper}.mjs"
             done
             if command -v npm >/dev/null 2>&1; then

@@ -18,6 +18,10 @@ Commands:
   device-info <entity_id>        Read a media device and its entity area assignments.
   device-area <entity_id> <area_id>
                                  Assign its device to an existing area and verify.
+  dashboard-get <default|url_path> <new.json>
+                                 Read dashboard config into a new working file.
+  dashboard-save <default|url_path> <new.json> <baseline.json>
+                                 Save if baseline matches live; back up and verify.
   status                         Check that the Home Assistant Core API is reachable.
   bluetooth-info <entry_id>      Read a local Bluetooth adapter's saved and runtime scan mode.
   bluetooth-mode <entry_id> <auto|active|passive>
@@ -83,6 +87,10 @@ call_service() {
 }
 
 case "${1:-}" in
+  dashboard-get|dashboard-save)
+    require_control
+    node "${HELPER_DIR}/codex-habitat-dashboard.mjs" "$@"
+    ;;
   bluetooth-info|bluetooth-mode)
     require_control
     node "${HELPER_DIR}/codex-habitat-bluetooth.mjs" "$@"

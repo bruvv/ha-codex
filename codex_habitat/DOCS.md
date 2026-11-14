@@ -108,6 +108,41 @@ access, or Supervisor-management API access.
 Reloading Lovelace resources does not reload dashboard YAML or storage
 configuration. Refresh the browser after dashboard changes.
 
+## Dashboard working files
+
+Use `dashboard-get` and `dashboard-save` for existing storage-mode dashboards.
+Enable **Allow Home Assistant control actions** first. For example, from a
+working directory outside `.storage`:
+
+```sh
+codex-habitat-ha dashboard-get default dashboard.before.json
+cp dashboard.before.json dashboard.prepared.json
+# Edit dashboard.prepared.json, leaving the baseline unchanged.
+codex-habitat-ha dashboard-save default dashboard.prepared.json dashboard.before.json
+```
+
+Use `default` for the default dashboard or provide a dashboard URL path.
+Working files contain a Lovelace configuration object with a `views` array,
+not a `.storage` envelope. Fetch creates a new, private file and refuses to
+overwrite an existing file. Save requires valid JSON and an unchanged live
+baseline; it creates an exclusive, private backup beside the prepared file,
+sends the native save command, and reads the result back to verify it.
+Unchanged configurations need no save. No active `.storage` files are read or
+written directly, including through symlinks.
+
+Baseline checking is not atomic compare-and-swap: avoid simultaneous UI edits.
+After a conflict, fetch a new baseline and reapply the intended change. After a
+timeout, connection loss, or failed readback, inspect the live dashboard before
+retrying; the save might already have succeeded. Restore a backup through the
+same save command with a freshly fetched baseline. Backups and working files
+contain private dashboard configuration; keep them out of public repositories.
+
+YAML dashboards must be edited through their YAML source; Home Assistant rejects
+this save route. Auto-generated dashboards without a saved configuration may
+return `config_not_found`; this helper does not create dashboards. No Core
+restart or resource reload is required. A browser refresh may be necessary.
+Readback confirms configuration, not successful rendering or card interactions.
+
 ## Terminal history and clipboard
 
 Leave **Session persistence** and **Preserve terminal history** on to keep a

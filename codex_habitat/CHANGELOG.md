@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.0
+
+- Added generic dashboard fetch/save commands using native Lovelace APIs, with baseline conflict checks, private pre-save backups, and readback verification.
+- Refuse working files inside active `.storage`, including symlink targets; dashboard reads never overwrite existing files.
+- Excluded the private local update inbox from Git and Docker contexts and added regression checks. Household-specific policy code remains excluded.
+
 ## 1.2.0
 
 - Added allowlisted entity-state reads, media-device and area inspection, and verified device-area assignment.

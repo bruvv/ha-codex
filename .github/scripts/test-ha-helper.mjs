@@ -103,12 +103,18 @@ try {
   check(script('codex-habitat-bluetooth.mjs', ['bluetooth-mode',id,'invalid']), 1, /Specify auto/);
   check(script('codex-habitat-bluetooth.mjs', ['bluetooth-info','../invalid']), 1, /config entry ID/);
   check(script('codex-habitat-bluetooth.mjs', ['bluetooth-info',id], {FIXTURE_REJECT:'true'}), 1, /fixture_rejection/);
-  for (const file of ['codex-habitat-bluetooth.mjs','codex-habitat-registry.mjs']) {
+  for (const file of ['codex-habitat-bluetooth.mjs','codex-habitat-registry.mjs','codex-habitat-dashboard.mjs']) {
     assert.ok(readFileSync(join(root,'Dockerfile'),'utf8').includes(file));
   }
   // Runtime helpers must accept entity IDs as input, never embed household IDs.
   for (const file of ['codex-habitat-ha', ...readdirSync(root).filter(name => name.endsWith('.mjs'))]) {
     assert.doesNotMatch(readFileSync(join(root,file),'utf8'), /\b(?:light|media_player|remote|switch|automation|input_boolean|sensor|binary_sensor|person|device_tracker|zone)\.[a-z0-9_]+/, file);
   }
+  const inbox = 'NOG TE VERWERKEN NOOIT UPLOADEN/';
+  const tracked = spawnSync('git', ['-c', `safe.directory=${resolve('.')}`, 'ls-files', '--', inbox], {encoding:'utf8'});
+  check(tracked);
+  assert.equal(tracked.stdout, '', 'Private update inbox must never be tracked.');
+  check(spawnSync('git', ['-c', `safe.directory=${resolve('.')}`, 'check-ignore', '--no-index', `${inbox}privacy-probe`], {encoding:'utf8'}));
+  assert.ok(readFileSync('.dockerignore','utf8').split('\n').includes(inbox));
   console.log(`${checks} helper checks passed (mock transports; no live Home Assistant actions).`);
 } finally { rmSync(dir, {recursive:true,force:true}); }

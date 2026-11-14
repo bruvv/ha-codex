@@ -78,7 +78,7 @@ RUN case "${BUILD_ARCH:-${TARGETARCH}}" in \
 COPY run.sh /run.sh
 COPY session.sh /usr/local/bin/codex-habitat-session
 COPY codex-habitat-ha /usr/local/bin/codex-habitat-ha
-COPY codex-habitat-bluetooth.mjs codex-habitat-registry.mjs /usr/local/bin/
+COPY codex-habitat-bluetooth.mjs codex-habitat-registry.mjs codex-habitat-dashboard.mjs /usr/local/bin/
 COPY tmux.conf /etc/codex-habitat-tmux.conf
 RUN chmod 0755 /run.sh /usr/local/bin/codex-habitat-session /usr/local/bin/codex-habitat-ha \
   && mkdir -p /homeassistant /config/codex

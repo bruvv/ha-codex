@@ -14,6 +14,14 @@ Home Assistant registries; do not embed a user's household policies in the app.
 Use synthetic fixtures in tests. Review the complete staged diff, including new
 files and build inputs, before every push—not only before releases.
 
+`NOG TE VERWERKEN NOOIT UPLOADEN/` is a private, local-only update inbox.
+Never stage, force-add, upload, package, or attach that directory or its raw
+contents. Keep it excluded from Git and Docker contexts. Read and compare its
+files locally, then port only reviewed, generic changes into the public source;
+preserve existing validation and privacy fixes. Leave household-specific code
+and the original inbox files private. Run the helper/privacy tests and inspect
+the staged diff before pushing or releasing.
+
 ## Open Home Foundation contributions
 
 If Codex Habitat is proposed to an Open Home Foundation project, the person opening
